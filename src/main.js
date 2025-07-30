@@ -681,9 +681,23 @@ class HotspotManager {
     }
 
     async createDefaultHotspots() {
-        const response = await fetch('hotspots.json');
-        const hotspotDataList = await response.json();
+        //option1 use json for hotspot info
+        // const response = await fetch('hotspots.json');
+        // const hotspotDataList = await response.json();
 
+        //option2 use cvs for hotspot info
+        const hotspotDataList = await new Promise((resolve, reject) => {
+            Papa.parse('hotspots.csv', {
+                download: true,
+                header: true,
+                complete: results => {
+                    // filter out empty rows
+                    const cleaned = results.data.filter(row => row.node && row.title);
+                    resolve(cleaned);
+                },
+                error: err => reject(err)
+            });
+        });
         // Store the full list of hotspots for navigation
         this.allHotspots = hotspotDataList.filter(h => h.type !== 'camera');
 
