@@ -1,0 +1,58 @@
+{
+  "Chassis": "",
+  "Manufacturer": "Volvo FL 7",
+  "Engine": "Diesel-powered, 169 kW",
+  "Gearbox": "Allison automatic, 4-speed transmission",
+
+  "Electrical System": "",
+  "Display": "Integrated two-color screen display in operator’s cabin",
+  "Controls": "Two intelligent joysticks for control",
+  "Drive System": "Hydrostatic drive system for precise movement during deicing",
+
+  "Driving Modes": "",
+  "Normal": "Normal driving mode from chassis cabin",
+  "One-man Operation": "One-man operation mode from operator's cabin",
+  "Hydrostatic": "Hydrostatic drive system ensures smooth movement and control",
+
+  "Colour Scheme": "",
+  "Chassis and Tank": "White (RAL9016)",
+  "Boom System": "Light grey (RAL7040)",
+  "Spray Cabin and Railing": "Yellow (RAL1003)",
+
+  "Tank": "",
+  "Tank 1": "4,500 liters",
+  "Tank 2": "3,000 liters",
+  "Tank 3": "500 liters (thermally insulated from Tank 2)",
+  "Material": "Stainless steel tanks with long-term durability",
+  "Filling Pipes": "Bottom filling pipes with 2” threaded caps",
+
+  "Heating System": "",
+  "Nozzle Heating": "Hot-at-nozzle heating system eliminates the need for preheating",
+  "Batch Heating": "Batch heating system for rapid start-up",
+  "Power Source": "Diesel-powered heating system",
+  "Fire Safety": "Automatic fire extinguishing system",
+  "Electrical Option": "Electrical heating option available",
+
+  "Fluid Systems": "",
+  "Tubing": "Separate tubing for Type I (deicing) and Type IV (anti-icing) fluids",
+  "Mixing Ratios": "Full proportional mixing system with selectable ratios (0%, 15%, 25%, 50%, 75%, 100%)",
+  "Double Mix Option": "Available for enhanced flexibility",
+
+  "Lift System":"",
+  "Boom Operation": "Fully proportional boom and telescope operation",
+  "Operator Cabin": "Closed, heated, and ventilated operator cabin",
+  "Max Load": "205 kg",
+  "Construction": "Sandblasted and corrosion-protected (C4 high)",
+  "System Interface": "System status interface in both chassis and operator cabin",
+
+  "Norm Compliance": "European Machinery Directive 2006/42/EC – CE; EN1915-1 through 4; EN12312-6; AHM 905, 910, 913, 914, 915, 975; SAE ARP1247, ARP1971, ARP4737; AEA Recommendations for Deicing/Anti-icing of Aircraft on Ground; ATA Specification for Ground Equipment Technical Data; EMC 89/336/EEC",
+
+  "Dimensions":"",
+  "Length": "10.9 meters (36’)",
+  "Width": "2.5 meters (8.2’)",
+  "Height": "4.05 meters (13.7’)",
+  "Max Nozzle Height": "21 meters (69’)",
+  "Horizontal Reach": "12.2 meters (40’) over 350° rotation",
+  "Max Eye Height": "11.5 meters (38’)",
+  "Max Flow Rate": "250 l/m (67 gallons/m)"
+}

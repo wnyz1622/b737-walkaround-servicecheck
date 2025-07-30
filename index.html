@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Vestergaard Elephant Beta 3D Tour</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="top-header">
+        <img src="media/logo.png" alt="Logo" class="logo" />
+        <h1 class="header-title">Vestergaard Elephant Beta</h1>
+
+    </div>
+    <div id="container"></div>
+
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <h2>Loading...</h2>
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+        </div>
+    </div>
+    <div id="specModal">
+        <h2 style="margin-top: 0;">Technical Specifications</h2>
+        <img id="closeSpecIcon" src="media/Close.png" alt="Close">
+        <div id="specContent"></div>
+    </div>
+    <div class="button-column">
+        <button id="techSpecBtn" title="Technical Specifications" class="icon-button techspec-btn">
+            <img id="techSpecIcon" src="media/Spec_default.svg" alt="Tech Specs">
+        </button>
+        <!-- <button id="pdfBtn" title="Manual" class="icon-button pdf-btn">
+            <img id="pdfIcon" src="media/PDF_default.svg" alt="Manual pdf">
+        </button> -->
+        <button id="resetBtn" title="Reset View" class="icon-button reset-btn">
+            <img id="resetIcon" src="media/Reset_default.svg" alt="Reset">
+        </button>
+        <button id="fullscreenBtn" class="icon-button fullscreen-btn" title="Fullscreen">
+            <img src="media/Fullscreen_default.svg" alt="Fullscreen" />
+        </button>
+
+
+    </div>
+
+    <!-- Add navigation UI -->
+    <div class="navigation-ui">
+        <button id="prevHotspotBtn" class="nav-button prev-button" title="Previous">
+            <img src="media/arrow_left.svg" alt="Previous">
+        </button>
+        <div id="currentHotspotTitle" class="hotspot-title-display"></div>
+        <button id="nextHotspotBtn" class="nav-button next-button" title="Next">
+            <img src="media/arrow_right.svg" alt="Next">
+        </button>
+    </div>
+
+    <div id="cameraControls"></div>
+
+
+
+
+
+    <script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+    "postprocessing": "https://cdn.jsdelivr.net/npm/@pmndrs/postprocessing@6.37.4/build/postprocessing.esm.js"
+  }
+}
+</script>
+
+    <script type="module" src="src/main.js"></script>
+</body>
+
+</html>

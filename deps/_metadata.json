@@ -1,0 +1,55 @@
+{
+  "hash": "64a6cfa6",
+  "configHash": "ad491fdc",
+  "lockfileHash": "8358eade",
+  "browserHash": "a6ab8ed9",
+  "optimized": {
+    "three": {
+      "src": "../../../../node_modules/three/build/three.module.js",
+      "file": "three.js",
+      "fileHash": "10356a92",
+      "needsInterop": false
+    },
+    "three/addons/controls/OrbitControls.js": {
+      "src": "../../../../node_modules/three/examples/jsm/controls/OrbitControls.js",
+      "file": "three_addons_controls_OrbitControls__js.js",
+      "fileHash": "71b37cd6",
+      "needsInterop": false
+    },
+    "three/addons/loaders/GLTFLoader.js": {
+      "src": "../../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js",
+      "file": "three_addons_loaders_GLTFLoader__js.js",
+      "fileHash": "1b50fa2d",
+      "needsInterop": false
+    },
+    "three/addons/loaders/DRACOLoader.js": {
+      "src": "../../../../node_modules/three/examples/jsm/loaders/DRACOLoader.js",
+      "file": "three_addons_loaders_DRACOLoader__js.js",
+      "fileHash": "262dbb50",
+      "needsInterop": false
+    },
+    "three/addons/loaders/RGBELoader.js": {
+      "src": "../../../../node_modules/three/examples/jsm/loaders/RGBELoader.js",
+      "file": "three_addons_loaders_RGBELoader__js.js",
+      "fileHash": "b8ce84ec",
+      "needsInterop": false
+    },
+    "three/examples/jsm/libs/stats.module.js": {
+      "src": "../../../../node_modules/three/examples/jsm/libs/stats.module.js",
+      "file": "three_examples_jsm_libs_stats__module__js.js",
+      "fileHash": "661fb1e0",
+      "needsInterop": false
+    },
+    "postprocessing": {
+      "src": "../../../../node_modules/postprocessing/build/index.js",
+      "file": "postprocessing.js",
+      "fileHash": "79a0407d",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-YWGNMRD2": {
+      "file": "chunk-YWGNMRD2.js"
+    }
+  }
+}
