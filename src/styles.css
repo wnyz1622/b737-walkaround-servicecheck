@@ -93,7 +93,7 @@ canvas {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    
+
 }
 
 .hotspot-info.active {
@@ -105,7 +105,7 @@ canvas {
     z-index: 1001;
 }
 
-  
+
 .hotspot-info .closeSpecIcon {
     position: absolute;
     top: 12px;
@@ -206,11 +206,12 @@ canvas {
         flex-direction: row;
         gap: 15px;
     }
+
     .hotspot {
         width: 18px;
         height: 18px;
     }
-    
+
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -225,10 +226,12 @@ canvas {
         height: auto;
         width: 35%;
     }
+
     .hotspot {
         width: 18px;
         height: 18px;
     }
+
     .hotspot-description {
         font-size: 8pt;
         line-height: 1.4em;
@@ -237,6 +240,7 @@ canvas {
     .hotspot-title {
         font-size: 10pt;
     }
+
     #mouse-control {
         display: none;
     }
@@ -248,12 +252,14 @@ canvas {
     .button-column {
         top: 70px;
         flex-direction: row;
-        
+
     }
+
     .icon-button img {
         width: 18px;
         height: 18px;
     }
+
     .button-column {
         gap: 2px;
     }
@@ -469,7 +475,7 @@ canvas {
     max-height: calc(100% - 56px);
     /* allow full height minus header */
     max-width: fit-content;
-    
+
     overflow-y: auto;
     font-family: 'Noto Sans', sans-serif;
     z-index: 1005;
@@ -656,4 +662,141 @@ canvas {
     cursor: pointer;
     opacity: 0.75;
     transition: opacity 0.2s;
+}
+
+/* Container (hidden by default) */
+#checklist-container {
+    display: none;
+    position: absolute;
+    top: 56px;
+    /* adjust to match your header height */
+    right: 0;
+    width: 500px;
+    height: 100%;
+    background: #010202a2;
+    backdrop-filter: blur(30px);
+    color: #fff;
+    padding: 30px;
+    border-radius: 0px;
+    width: 500px;
+    height: 100%;
+    max-height: calc(100% - 56px);
+    /* allow full height minus header */
+    max-width: fit-content;
+    /* toggled by JS */
+    overflow-y: auto;
+    z-index: 1006;
+    font-family: 'Noto Sans', sans-serif;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+/* Scrollbar */
+#checklist-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+#checklist-container::-webkit-scrollbar-track {
+    border-radius: 6px;
+}
+
+#checklist-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+}
+
+#checklist-container::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+/* Progress bar */
+#progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #444;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+#checklist-progress {
+    height: 100%;
+    background: #EF5337;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Checklist items */
+#checklist {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#checklist li {
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #444;
+    padding-bottom: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#checklist li:last-child {
+    margin-bottom: 20px; /* extra padding at bottom */
+}
+
+#checklist li input {
+    margin-bottom: 0;
+}
+
+#checklist li.completed {
+   
+    color: #888;
+}
+/* Step title */
+#checklist .step-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-direction: column;
+    margin-bottom: 6px;
+}
+
+/* Checkbox styling (align left) */
+#checklist li input {
+    margin-right: 10px;
+}
+
+/* Step description text */
+#checklist .step-description {
+    font-size: 14px;
+    color: #bbbbbb;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url('media/checkbox_unchecked.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.custom-checkbox.checked {
+    background-image: url('media/checkbox_checked.svg');
 }

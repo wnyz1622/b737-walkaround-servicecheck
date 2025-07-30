@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Vestergaard Elephant Beta 3D Tour</title>
+    <title>B737 Service Check Walk-Around Requirement Review</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 <body>
     <div class="top-header">
         <img src="media/logo.png" alt="Logo" class="logo" />
-        <h1 class="header-title">Vestergaard Elephant Beta</h1>
+        <h1 class="header-title">B737 Service Check Walk-Around Requirement Review</h1>
 
     </div>
     <div id="container"></div>
@@ -31,6 +31,14 @@
         <img id="closeSpecIcon" src="media/Close.png" alt="Close">
         <div id="specContent"></div>
     </div>
+    <div id="checklist-container" style="display:none">
+        <h2 style="margin-top: 0;">Checklist Review</h2>
+        <img id="closeSpecIcon" src="media/Close.png" alt="Close">
+        <div id="progress-bar">
+            <div id="checklist-progress"></div>
+        </div>
+        <ul id="checklist"></ul>
+    </div>
     <div class="button-column">
         <button id="techSpecBtn" title="Technical Specifications" class="icon-button techspec-btn">
             <img id="techSpecIcon" src="media/Spec_default.svg" alt="Tech Specs">
@@ -38,6 +46,9 @@
         <!-- <button id="pdfBtn" title="Manual" class="icon-button pdf-btn">
             <img id="pdfIcon" src="media/PDF_default.svg" alt="Manual pdf">
         </button> -->
+        <button id="checklistBtn" title="Check List" class="icon-button checklist-btn">
+            <img id="checklistIcon" src="media/checklist_default.svg" alt="Check List">
+        </button>
         <button id="resetBtn" title="Reset View" class="icon-button reset-btn">
             <img id="resetIcon" src="media/Reset_default.svg" alt="Reset">
         </button>

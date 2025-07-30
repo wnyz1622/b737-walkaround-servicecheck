@@ -125,8 +125,8 @@ class HotspotManager {
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('container').appendChild(this.renderer.domElement);
-          
-        
+
+
 
         // Add WebGL context loss handler
         this.renderer.domElement.addEventListener('webglcontextlost', (event) => {
@@ -139,13 +139,13 @@ class HotspotManager {
         rightArrow.src = 'media/MouseControl.svg'; // adjust path if needed
         rightArrow.id = 'mouse-control';
         document.body.appendChild(rightArrow);
-        
+
         // 🔆 Enable tone mapping and adjust exposure
         this.renderer.toneMapping = THREE.LinearToneMapping; // or THREE.ReinhardToneMapping
         this.renderer.toneMappingExposure = 0.95; // adjust brightness here (try 1.2–2.0)
         this.renderer.outputEncoding = SRGBColorSpace;
         this.renderer.toneMapping = THREE.LinearToneMapping;
-        
+
 
         // Add lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
@@ -189,7 +189,7 @@ class HotspotManager {
             //     // height: window.innerHeight * Math.min(window.devicePixelRatio, 2)
             // },
             resolution: { width: window.innerWidth / 2, height: window.innerHeight / 2 },
-            
+
             xRay: false,
             // Edge detection settings
             patternTexture: null,
@@ -208,7 +208,7 @@ class HotspotManager {
         this.composer.addPass(effectPass);
 
         // Add floor disc
-        const floorGeometry = new THREE.CircleGeometry(35, 48);
+        const floorGeometry = new THREE.CircleGeometry(70, 48);
         const floorMaterial = new THREE.MeshStandardMaterial({
             color: 0xbbbbbb,
             transparent: true,
@@ -219,9 +219,9 @@ class HotspotManager {
         });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2; // Rotate to be horizontal
-        floor.position.y = -5.5; // Position lower below the model
-        floor.position.z = -5.5;
-        floor.position.x = 2.5;
+        floor.position.y = -0; // Position lower below the model
+        floor.position.z = -0;
+        floor.position.x = 0;
         floor.receiveShadow = true;
         this.scene.add(floor);
 
@@ -237,7 +237,7 @@ class HotspotManager {
 
         // Set orbit boundaries
         this.controls.minDistance = 0.1; // Minimum zoom distance
-        this.controls.maxDistance = 30; // Maximum zoom distance
+        this.controls.maxDistance = 80; // Maximum zoom distance
         this.controls.minPolarAngle = Math.PI / 6; // Minimum vertical angle (30 degrees)
         this.controls.maxPolarAngle = Math.PI / 2; // Maximum vertical angle (120 degrees)
         // this.controls.minAzimuthAngle = -Math.PI; // Allow full 360 rotation
@@ -246,8 +246,8 @@ class HotspotManager {
         this.controls.target.y = 0; // Keep the orbit target at floor level
         // Keep target from going below floor
         this.controls.addEventListener('change', () => {
-            if (this.controls.target.y < -5.3) {
-                this.controls.target.y = -5.3;
+            if (this.controls.target.y < -0.5) {
+                this.controls.target.y = -0.5;
             }
         });
         // Track camera/controls changes for hotspot update
@@ -291,6 +291,7 @@ class HotspotManager {
         this.setupFullscreenButton();
         this.setupTechSpecToggle();
         this.setupResetButton();
+        this.setupChecklistButton();
         //this.setupPDFButton();
 
         //test outliene box
@@ -349,7 +350,7 @@ class HotspotManager {
             };
 
 
-            const modelPath = 'media/model/compressed_1753896219932_ElephantBeta_v7.glb';
+            const modelPath = 'media/model/b737_callouts_v1.glb';
             console.log('Loading model from:', modelPath);
 
             // this.loader.load(modelPath, (gltf) => {
@@ -504,10 +505,10 @@ class HotspotManager {
                         }
                     });
 
-                    // Center model
+                    //Center model
                     const box = new THREE.Box3().setFromObject(this.model);
-                    const center = box.getCenter(new THREE.Vector3());
-                    this.model.position.sub(center);
+                    //const center = box.getCenter(new THREE.Vector3());
+                    //this.model.position.sub(center);
 
                     // 180 degrees in radians
                     this.model.rotation.y = Math.PI / 1.25;
@@ -521,8 +522,8 @@ class HotspotManager {
                     const fov = this.camera.fov * (Math.PI / 180);
                     let cameraZ = Math.abs(maxDim / Math.tan(fov / 2));
                     // Enforce a comfortable default reset distance (e.g., z=2)
-                    const defaultResetDistance = 25; // Between minDistance (0.1) and maxDistance (25)
-                    this.camera.position.set(0, 0, defaultResetDistance);
+                    const defaultResetDistance = 30;
+                    this.camera.position.set(0, 0, cameraZ);
                     this.camera.lookAt(0, 0, 0);
                     this.camera.updateProjectionMatrix();
                     this.initialCameraPosition = new THREE.Vector3(0, 0, defaultResetDistance);
@@ -648,19 +649,19 @@ class HotspotManager {
 
         if (meshToOutline) {
             const meshesToSelect = [];
-        
+
             // If the node is a group or has children, traverse it
             meshToOutline.traverse((child) => {
                 if (child.isMesh) {
                     meshesToSelect.push(child);
                 }
             });
-        
+
             // If it is a single mesh with multiple materials, still push it
             if (meshToOutline.isMesh && meshesToSelect.length === 0) {
                 meshesToSelect.push(meshToOutline);
             }
-        
+
             if (meshesToSelect.length > 0) {
                 this.outlineEffect.selection.set(meshesToSelect);
                 this.animateOutlineEdgeStrength(0, 5, 1500);
@@ -687,7 +688,7 @@ class HotspotManager {
 
         //option2 use cvs for hotspot info
         const hotspotDataList = await new Promise((resolve, reject) => {
-            Papa.parse('hotspots.csv', {
+            Papa.parse('walkaround_steps_nodes.csv', {
                 download: true,
                 header: true,
                 complete: results => {
@@ -1108,42 +1109,42 @@ class HotspotManager {
         this.cameraChanged = false;
         this.controlsChanged = false;
 
-        
-         // Always raycast every frame for more stable results
-    this.hotspots.forEach((hotspot) => {
-        // Get world position
-        const worldPosition = new THREE.Vector3();
-        hotspot.mesh.getWorldPosition(worldPosition);
 
-        // Project to screen coordinates
-        const screenPosition = worldPosition.clone().project(this.camera);
-        const isBehindCamera = screenPosition.z > 1;
-        const isInView = screenPosition.x >= -1 && screenPosition.x <= 1 &&
-                         screenPosition.y >= -1 && screenPosition.y <= 1;
+        // Always raycast every frame for more stable results
+        this.hotspots.forEach((hotspot) => {
+            // Get world position
+            const worldPosition = new THREE.Vector3();
+            hotspot.mesh.getWorldPosition(worldPosition);
 
-        const x = (screenPosition.x + 1) * window.innerWidth / 2;
-        const y = (-screenPosition.y + 1) * window.innerHeight / 2;
+            // Project to screen coordinates
+            const screenPosition = worldPosition.clone().project(this.camera);
+            const isBehindCamera = screenPosition.z > 1;
+            const isInView = screenPosition.x >= -1 && screenPosition.x <= 1 &&
+                screenPosition.y >= -1 && screenPosition.y <= 1;
 
-        // Raycast to detect occlusion
-        const direction = worldPosition.clone().sub(this.camera.position).normalize();
-        this.raycaster.set(this.camera.position, direction);
-        const intersects = this.raycaster.intersectObjects(this.interactiveMeshes, true);
-        const distanceToHotspot = this.camera.position.distanceTo(worldPosition);
-        const isOccluded = intersects.length > 0 && intersects[0].distance + 0.1 < distanceToHotspot;
+            const x = (screenPosition.x + 1) * window.innerWidth / 2;
+            const y = (-screenPosition.y + 1) * window.innerHeight / 2;
 
-        // Update visibility using opacity transition
-        const shouldShow = !(isBehindCamera || !isInView || isOccluded);
-        hotspot.element.style.opacity = shouldShow ? '1' : '0';
-        hotspot.element.style.pointerEvents = shouldShow ? 'auto' : 'none';
+            // Raycast to detect occlusion
+            const direction = worldPosition.clone().sub(this.camera.position).normalize();
+            this.raycaster.set(this.camera.position, direction);
+            const intersects = this.raycaster.intersectObjects(this.interactiveMeshes, true);
+            const distanceToHotspot = this.camera.position.distanceTo(worldPosition);
+            const isOccluded = intersects.length > 0 && intersects[0].distance + 0.1 < distanceToHotspot;
 
-        // Position updates
-        hotspot.element.style.left = `${x}px`;
-        hotspot.element.style.top = `${y}px`;
+            // Update visibility using opacity transition
+            const shouldShow = !(isBehindCamera || !isInView || isOccluded);
+            hotspot.element.style.opacity = shouldShow ? '1' : '0';
+            hotspot.element.style.pointerEvents = shouldShow ? 'auto' : 'none';
 
-        // Handle info panel
-        const showInfo = shouldShow && (hotspot === this.selectedHotspot || hotspot.element.matches(':hover'));
-        hotspot.info.style.opacity = showInfo ? '1' : '0';
-        hotspot.info.style.pointerEvents = showInfo ? 'auto' : 'none';
+            // Position updates
+            hotspot.element.style.left = `${x}px`;
+            hotspot.element.style.top = `${y}px`;
+
+            // Handle info panel
+            const showInfo = shouldShow && (hotspot === this.selectedHotspot || hotspot.element.matches(':hover'));
+            hotspot.info.style.opacity = showInfo ? '1' : '0';
+            hotspot.info.style.pointerEvents = showInfo ? 'auto' : 'none';
 
 
             function isMobileView() {
@@ -1208,7 +1209,7 @@ class HotspotManager {
         button.addEventListener('click', () => {
             // Replace with the path to your PDF
             const pdfUrl = 'media/65P10AR_Rev02_12-24.pdf';
-            
+
             // Open in a new tab
             window.open(pdfUrl, '_blank');
         });
@@ -1220,6 +1221,153 @@ class HotspotManager {
             icon.src = 'media/PDF_default.svg';
         });
     }
+
+    updateProgress() {
+        const total = this.checklistData.length;
+        const done = this.completedSteps.size;
+        const progressPercent = (done / total) * 100;
+    
+        const progressBar = document.getElementById('checklist-progress');
+        if (progressBar) {
+            progressBar.style.width = `${progressPercent}%`;
+        }
+    
+        // Strike-through completed list items
+        document.querySelectorAll('#checklist li').forEach((li, idx) => {
+            if (this.completedSteps.has(idx)) {
+                li.classList.add('completed');
+            } else {
+                li.classList.remove('completed');
+            }
+        });
+    }
+    
+
+
+    goToStep(index) {
+        const step = this.checklistData[index];
+    
+        // Focus on camera and outline node
+        this.focusOnStep(step);
+    
+        // Add step as completed
+        this.completedSteps.add(index);
+    
+        // Update checkbox UI
+        const checkbox = document.querySelector(
+            `.custom-checkbox[data-index="${index}"]`
+        );
+        if (checkbox) {
+            checkbox.classList.add('checked');
+        }
+    
+        // Update progress bar & completed style
+        this.updateProgress();
+    }
+    
+
+    async buildChecklistUI() {
+        const list = document.getElementById('checklist');
+        list.innerHTML = '';
+
+        // Parse CSV (PapaParse)
+        const data = await new Promise((resolve, reject) => {
+            Papa.parse('walkaround_steps_nodes.csv', {
+                download: true,
+                header: true,
+                complete: results => resolve(results.data),
+                error: err => reject(err)
+            });
+        });
+
+        this.checklistData = data;
+        this.completedSteps = new Set();
+
+        data.forEach((step, index) => {
+            const li = document.createElement('li');
+
+            // Header row with checkbox and title
+            const checkbox = document.createElement('span');
+            checkbox.className = 'custom-checkbox';
+            checkbox.dataset.index = index;
+
+            const stepNumber = index + 1;
+            const titleRow = document.createElement('div');
+            titleRow.className = 'step-title';
+            titleRow.textContent = `${stepNumber}. ${step.title}`;
+
+            const header = document.createElement('div');
+            header.className = 'step-header';
+            header.appendChild(checkbox);
+            header.appendChild(titleRow);
+
+            // Description
+            const descRow = document.createElement('div');
+            descRow.className = 'step-description';
+            descRow.textContent = step.description;
+
+            // Checkbox click
+            checkbox.addEventListener('click', (e) => {
+                e.stopPropagation();
+                checkbox.classList.toggle('checked');
+
+                // Update completed steps set
+                if (checkbox.classList.contains('checked')) {
+                    this.completedSteps.add(index);
+                } else {
+                    this.completedSteps.delete(index);
+                }
+
+                this.updateProgress();
+            });
+
+            // Jump to step on list item click
+            li.addEventListener('click', () => this.goToStep(index));
+
+            // Append
+            li.appendChild(header);
+            li.appendChild(descRow);
+            list.appendChild(li);
+        });
+
+
+    }
+
+
+    setupChecklistButton() {
+        const button = document.getElementById('checklistBtn');
+        const icon = document.getElementById('checklistIcon');
+
+        let isVisible = false;
+
+        const showChecklist = async () => {
+            // Show checklist container
+            document.getElementById('checklist-container').style.display = 'block';
+            icon.src = 'media/checklist_active.svg';
+
+            // Build checklist if not already built
+            if (!this.checklistBuilt) {
+                await this.buildChecklistUI(); // function to populate steps
+                this.checklistBuilt = true;
+            }
+        };
+
+        const hideChecklist = () => {
+            // Hide checklist container
+            document.getElementById('checklist-container').style.display = 'none';
+            icon.src = 'media/checklist_default.svg';
+        };
+
+        button.addEventListener('click', () => {
+            if (isVisible) {
+                hideChecklist();
+            } else {
+                showChecklist();
+            }
+            isVisible = !isVisible;
+        });
+    }
+
     setupResetButton() {
         const button = document.getElementById('resetBtn');
         const icon = document.getElementById('resetIcon');
@@ -1354,7 +1502,7 @@ class HotspotManager {
 
     animate() {
         // Disable shadow and tone mapping on mobile for performance
-        
+
         // Pause rendering when page is hidden
         if (document.hidden) return;
         requestAnimationFrame(this.animate.bind(this));
