@@ -288,8 +288,12 @@ class HotspotManager {
                 this.controlsChanged = true;
             }, 100);
         });
+
+
+
+
         this.setupFullscreenButton();
-        this.setupTechSpecToggle();
+        //this.setupTechSpecToggle();
         this.setupResetButton();
         this.setupChecklistButton();
         //this.setupPDFButton();
@@ -430,7 +434,7 @@ class HotspotManager {
                             };
 
                             // Log all nodes
-                            console.log(`Node: "${node.name}" (Type: ${node.type}) Position:`, position);
+                            //console.log(`Node: "${node.name}" (Type: ${node.type}) Position:`, position);
 
                             // Specifically log target nodes if found
                             if (targetNodes.includes(node.name)) {
@@ -523,10 +527,12 @@ class HotspotManager {
                     let cameraZ = Math.abs(maxDim / Math.tan(fov / 2));
                     // Enforce a comfortable default reset distance (e.g., z=2)
                     const defaultResetDistance = 30;
-                    this.camera.position.set(0, 0, cameraZ);
+                    this.camera.position.set(-450, 200, cameraZ*2);
                     this.camera.lookAt(0, 0, 0);
                     this.camera.updateProjectionMatrix();
-                    this.initialCameraPosition = new THREE.Vector3(0, 0, defaultResetDistance);
+
+
+                    this.initialCameraPosition = new THREE.Vector3(-500, 150, cameraZ);
                     this.initialCameraTarget = new THREE.Vector3(0, 0, 0);
                     // Set orbit controls target to model center (orbit mode)
                     this.controls.target.set(0, 0, 0);
@@ -595,22 +601,40 @@ class HotspotManager {
         // Deselect previous
         if (this.selectedHotspot && this.selectedHotspot !== hotspot) {
             this.visitedHotspots.add(this.selectedHotspot);
-            this.selectedHotspot.element.style.backgroundImage =
-                this.selectedHotspot.data.type === 'animation'
-                    ? `url('media/door_visited.png')`
-                    : `url('media/Info_visited.png')`;
+
+            // this.selectedHotspot.element.style.backgroundImage =
+            //     this.selectedHotspot.data.type === 'animation'
+            //         ? `url('media/door_visited.png')`
+            //         : `url('media/Info_visited.png')`;
+            // Add visited class for number circle hotspots
+            if (this.selectedHotspot.element.classList.contains('hotspot-number')) {
+                this.selectedHotspot.element.style.backgroundImage = 'none'; // clear old PNG
+                this.selectedHotspot.element.classList.remove('selected');
+                this.selectedHotspot.element.classList.add('visited');
+            } else {
+                // Keep old icon logic for animation hotspots
+                this.selectedHotspot.element.style.backgroundImage =
+                    this.selectedHotspot.data.type === 'animation'
+                        ? `url('media/door_visited.png')`
+                        : `url('media/Info_visited.png')`;
+            }
+
             this.selectedHotspot.info.style.display = 'none';
             this.selectedHotspot.info.classList.remove('active');
         }
-
+        // Mark current as selected
+        if (hotspot.element.classList.contains('hotspot-number')) {
+            hotspot.element.style.backgroundImage = 'none';
+            hotspot.element.classList.remove('visited');
+            hotspot.element.classList.add('selected');
+        } else {
+            hotspot.element.style.backgroundImage = hotspotData.type === 'animation'
+                ? `url('media/door_selected.png')`
+                : `url('media/Info_Selected.png')`;
+        }
         this.selectedHotspot = hotspot;
-
         this.visitedHotspots.add(hotspot);
 
-        // Update icon state
-        hotspot.element.style.backgroundImage = hotspotData.type === 'animation'
-            ? `url('media/door_selected.png')`
-            : `url('media/Info_Selected.png')`;
 
         // ✅ Always show the info panel, including description
         hotspot.info.style.display = 'block';
@@ -644,9 +668,9 @@ class HotspotManager {
         } else {
             this.moveToHotspotView(hotspot);
         }
+
         //outline seleected mesh
         const meshToOutline = this.model.getObjectByName(hotspotData.node);
-
         if (meshToOutline) {
             const meshesToSelect = [];
 
@@ -671,6 +695,30 @@ class HotspotManager {
             }
         } else {
             console.warn('❌ Node not found in model:', hotspotData.node);
+        }
+        // 🔁 Sync checklist with hotspot
+        if (this.checklistData) {
+            const stepIndex = this.checklistData.findIndex(step => step.node === hotspotData.node);
+            if (stepIndex !== -1) {
+                const allItems = document.querySelectorAll('#checklist li');
+                allItems.forEach(item => item.classList.remove('open'));
+
+                // Get the checklist item
+                const li = document.querySelectorAll('#checklist li')[stepIndex];
+                const checkbox = li.querySelector('.custom-checkbox');
+
+                // Mark it as checked
+                checkbox.classList.add('checked');
+                li.classList.add('open');
+                this.completedSteps.add(stepIndex);
+                this.updateProgress();
+
+                // Only scroll if the checklist container is visible
+                const checklistContainer = document.getElementById('checklist-container');
+                if (checklistContainer && checklistContainer.style.display === 'block') {
+                    li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
         }
 
         // 🔁 Sync navigation index
@@ -705,7 +753,6 @@ class HotspotManager {
         // 🔎 Filter camera hotspots from JSON
         const cameraHotspots = hotspotDataList.filter(h => h.type === 'camera');
 
-        // 🎯 Get the UI container
         const cameraControls = document.getElementById("cameraControls");
         cameraControls.innerHTML = ''; // Clear existing
 
@@ -831,7 +878,7 @@ class HotspotManager {
             navigateToHotspot(this.currentHotspotIndex + 1);
         });
 
-        hotspotDataList.forEach(hotspotData => {
+        hotspotDataList.forEach((hotspotData, index) => {
             if (hotspotData.type === 'camera') return;
 
             let node = this.model.getObjectByName(hotspotData.node);
@@ -856,24 +903,31 @@ class HotspotManager {
 
             const hotspotDiv = document.createElement('div');
             hotspotDiv.className = 'hotspot';
-            hotspotDiv.style.backgroundImage = hotspotData.type === 'animation'
-                ? `url('media/door_default.png')`
-                : `url('media/Info_default.png')`;
+            // hotspotDiv.style.backgroundImage = hotspotData.type === 'animation'
+            //     ? `url('media/door_default.png')`
+            //     : `url('media/Info_default.png')`;
+            if (hotspotData.type === 'animation') {
+                hotspotDiv.style.backgroundImage = `url('media/door_default.png')`;
+            } else {
+                hotspotDiv.classList.add('hotspot-number');
+                hotspotDiv.style.backgroundImage = 'none'; // clear old PNG
+                hotspotDiv.textContent = index + 1; // number starts at 1
+            }
             document.body.appendChild(hotspotDiv);
 
             const infoDiv = document.createElement('div');
             infoDiv.className = 'hotspot-info';
+            // Check if it's mobile or desktop
+            const isMobileView = window.innerWidth <= 600;
+
             infoDiv.innerHTML = `
-           
-             <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
-             <div class="text-scroll"> 
-            
-             <div class="hotspot-title">${hotspotData.title}</div>
-        <div class="hotspot-description">${hotspotData.description}</div>
-    </div>
-    
-    <div class="bottom-blocker"></div>
-        `;
+                <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
+                <div class="text-scroll">
+                    <div class="hotspot-title">${hotspotData.title}</div>
+                    ${isMobileView ? `<div class="hotspot-description">${hotspotData.description}</div>` : ''}
+                </div>
+                <div class="bottom-blocker"></div>
+            `;
             document.body.appendChild(infoDiv);
 
             // Add working close logic
@@ -885,9 +939,18 @@ class HotspotManager {
 
                 // Deselect logic if you're using this.selectedHotspot
                 if (this.selectedHotspot && this.selectedHotspot.info === infoDiv) {
-                    this.selectedHotspot.element.style.backgroundImage = this.selectedHotspot.data.type === 'animation'
-                        ? `url('media/door_visited.png')`
-                        : `url('media/Info_visited.png')`;
+                    // Handle number hotspots separately
+                    if (this.selectedHotspot.element.classList.contains('hotspot-number')) {
+                        this.selectedHotspot.element.style.backgroundImage = 'none';
+                        this.selectedHotspot.element.classList.remove('selected');
+                        this.selectedHotspot.element.classList.add('visited');
+                    } else {
+                        // Fallback to old PNG logic for animation hotspots
+                        this.selectedHotspot.element.style.backgroundImage = this.selectedHotspot.data.type === 'animation'
+                            ? `url('media/door_visited.png')`
+                            : `url('media/Info_visited.png')`;
+                    }
+
                     this.selectedHotspot = null;
                     // Clear outline effect
                     if (this.outlineEffect && this.outlineEffect.selection) {
@@ -925,25 +988,34 @@ class HotspotManager {
             });
 
             hotspotDiv.addEventListener('mouseenter', () => {
-                if (this.selectedHotspot !== hotspot) {
-                    hotspotDiv.style.backgroundImage = hotspotData.type === "animation"
-                        ? `url('media/door_selected.png')`
-                        : `url('media/Info_Selected.png')`;
+                if (hotspotDiv.classList.contains('hotspot-number')) {
+                    // For number circles → mark selected only if not visited
+                    if (!this.visitedHotspots.has(hotspot) && this.selectedHotspot !== hotspot) {
+                        hotspotDiv.classList.add('selected');
+                    }
+                } else {
+                    // Original icon logic
+                    if (this.selectedHotspot !== hotspot) {
+                        hotspotDiv.style.backgroundImage = hotspotData.type === "animation"
+                            ? `url('media/door_selected.png')`
+                            : `url('media/Info_Selected.png')`;
+                    }
                 }
 
                 infoDiv.style.display = 'block';
             });
 
             hotspotDiv.addEventListener('mouseleave', () => {
-                if (this.selectedHotspot === hotspot) {
-                    hotspotDiv.style.backgroundImage = hotspotData.type === "animation"
-                        ? `url('media/door_selected.png')`
-                        : `url('media/Info_Selected.png')`;
-                } else if (this.visitedHotspots.has(hotspot)) {
-                    hotspotDiv.style.backgroundImage = hotspotData.type === "animation"
-                        ? `url('media/door_visited.png')`
-                        : `url('media/Info_visited.png')`;
+                if (hotspotDiv.classList.contains('hotspot-number')) {
+                    // Remove hover/selected class if it's not the active one
+                    if (this.selectedHotspot !== hotspot) {
+                        hotspotDiv.classList.remove('selected');
+                        if (this.visitedHotspots.has(hotspot)) {
+                            hotspotDiv.classList.add('visited');
+                        }
+                    }
                 } else {
+                    // old image logic
                     hotspotDiv.style.backgroundImage = hotspotData.type === "animation"
                         ? `url('media/door_default.png')`
                         : `url('media/Info_default.png')`;
@@ -1226,12 +1298,12 @@ class HotspotManager {
         const total = this.checklistData.length;
         const done = this.completedSteps.size;
         const progressPercent = (done / total) * 100;
-    
+
         const progressBar = document.getElementById('checklist-progress');
         if (progressBar) {
             progressBar.style.width = `${progressPercent}%`;
         }
-    
+
         // Strike-through completed list items
         document.querySelectorAll('#checklist li').forEach((li, idx) => {
             if (this.completedSteps.has(idx)) {
@@ -1241,18 +1313,18 @@ class HotspotManager {
             }
         });
     }
-    
+
 
 
     goToStep(index) {
         const step = this.checklistData[index];
-    
+
         // Focus on camera and outline node
-        this.focusOnStep(step);
-    
+        // this.focusOnStep(step);
+
         // Add step as completed
         this.completedSteps.add(index);
-    
+
         // Update checkbox UI
         const checkbox = document.querySelector(
             `.custom-checkbox[data-index="${index}"]`
@@ -1260,11 +1332,11 @@ class HotspotManager {
         if (checkbox) {
             checkbox.classList.add('checked');
         }
-    
+
         // Update progress bar & completed style
         this.updateProgress();
     }
-    
+
 
     async buildChecklistUI() {
         const list = document.getElementById('checklist');
@@ -1285,8 +1357,12 @@ class HotspotManager {
 
         data.forEach((step, index) => {
             const li = document.createElement('li');
+            li.classList.add('step-item');
 
-            // Header row with checkbox and title
+            // Header row (checkbox + title + arrow)
+            const header = document.createElement('div');
+            header.className = 'step-header';
+
             const checkbox = document.createElement('span');
             checkbox.className = 'custom-checkbox';
             checkbox.dataset.index = index;
@@ -1296,22 +1372,50 @@ class HotspotManager {
             titleRow.className = 'step-title';
             titleRow.textContent = `${stepNumber}. ${step.title}`;
 
-            const header = document.createElement('div');
-            header.className = 'step-header';
+            const arrow = document.createElement('span');
+            arrow.className = 'arrow-icon'; // arrow icon that rotates
+
             header.appendChild(checkbox);
             header.appendChild(titleRow);
+            header.appendChild(arrow);
 
-            // Description
+            // Description (hidden by default)
             const descRow = document.createElement('div');
             descRow.className = 'step-description';
             descRow.textContent = step.description;
 
-            // Checkbox click
+            // Convert `\n\n` or `\n` into paragraphs
+            const paragraphs = (step.description || '')
+                .split(/\n+/)
+                .map(p => `<p>${p.trim()}</p>`)
+                .join('');
+
+            descRow.innerHTML = paragraphs || '<p>No description available</p>';
+
+            // Toggle dropdown on header click
+            header.addEventListener('click', () => {
+                // Close all other dropdowns (accordion style)
+                document.querySelectorAll('#checklist li').forEach(item => {
+                    if (item !== li) {
+                        item.classList.remove('open');
+                    }
+                });
+                li.classList.toggle('open');
+                // 🔹 Auto trigger hotspot when opened
+                if (li.classList.contains('open')) {
+                    const step = this.checklistData[index];
+                    const hotspot = this.hotspots.find(h => h.data.node === step.node);
+                    if (hotspot) {
+                        this.handleHotspotClick(hotspot);
+                    }
+                }
+            });
+
+            // Checkbox click only toggles checkbox (don’t toggle dropdown)
             checkbox.addEventListener('click', (e) => {
                 e.stopPropagation();
                 checkbox.classList.toggle('checked');
 
-                // Update completed steps set
                 if (checkbox.classList.contains('checked')) {
                     this.completedSteps.add(index);
                 } else {
@@ -1321,14 +1425,24 @@ class HotspotManager {
                 this.updateProgress();
             });
 
-            // Jump to step on list item click
-            li.addEventListener('click', () => this.goToStep(index));
+            // Clicking title/camera jump auto-checks + opens dropdown
+            titleRow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.goToStep(index);
+                li.classList.add('open');
+                // 🔹 Trigger the correct hotspot view
+                const step = this.checklistData[index];
+                const hotspot = this.hotspots.find(h => h.data.node === step.node);
+                if (hotspot) {
+                    this.handleHotspotClick(hotspot); // this will move camera + show info panel
+                }
+            });
 
-            // Append
             li.appendChild(header);
             li.appendChild(descRow);
             list.appendChild(li);
         });
+
 
 
     }
@@ -1337,10 +1451,16 @@ class HotspotManager {
     setupChecklistButton() {
         const button = document.getElementById('checklistBtn');
         const icon = document.getElementById('checklistIcon');
+        const closeIcon = document.getElementById('closeChecklistIcon');
 
         let isVisible = false;
-
+         
         const showChecklist = async () => {
+            // Close specModal if it's open
+            const specModal = document.getElementById('specModal');
+            if (specModal) {
+                specModal.style.display = 'none';
+            }
             // Show checklist container
             document.getElementById('checklist-container').style.display = 'block';
             icon.src = 'media/checklist_active.svg';
@@ -1358,6 +1478,7 @@ class HotspotManager {
             icon.src = 'media/checklist_default.svg';
         };
 
+        closeIcon.addEventListener('click', hideChecklist);
         button.addEventListener('click', () => {
             if (isVisible) {
                 hideChecklist();
@@ -1377,7 +1498,7 @@ class HotspotManager {
 
             // Enforce reset to a comfortable distance and allow zooming
             const targetPos = this.initialCameraPosition.clone();
-            const targetTarget = new THREE.Vector3(0.2, 0, 0);
+            const targetTarget = this.initialCameraTarget.clone();
             const startPos = this.camera.position.clone();
             const startTarget = this.controls.target.clone();
             const duration = 2000;
@@ -1473,6 +1594,15 @@ class HotspotManager {
                 isVisible = true;
                 console.error(err);
             }
+
+            // Close checklist if it's open
+            const checklist = document.getElementById('checklist-container');
+            if (checklist) {
+                checklist.style.display = 'none';
+            }
+
+            document.getElementById('specModal').style.display = 'block';
+            icon.src = 'media/Spec_active.svg';
         };
 
         const hideSpecs = () => {
