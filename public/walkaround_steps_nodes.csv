@@ -1,16 +1,16 @@
-node,title,camera,description
+node,title,camera,description,displayTitle
 01_EngineCowlings,"Engine Cowlings, Pylons, Drains, and Nose Cowling",Cam_01_EngineCowlings,"Start with a general visual check of the exterior areas of the Engine Cowlings, Pylons, Drains, and Nose Cowling looking for the condition security, any fluid leaks or damage, and any other conditions or concerns. 
 Ensure the condition is good and everything looks as it should; there are no nicks and all areas are secure.
-Always check for anything that could get sucked into the engine and cause damage."
+Always check for anything that could get sucked into the engine and cause damage.",Service Check 1
 02_EngineExhaust,Engine Exhaust Area,Cam_02_EngineExhaust,"A general visual inspection of the Engine Exhaust includes checking the condition and security, any evidence of foreign object damage, commonly known as FOD, oil stains, obvious defects, and any other conditions or concerns. 
-Ensure that everything is in good condition and looks as it should, and that there are no nicks and all areas are secure."
-03_LandingGearWheelAssemblies,Landing Gear Wheel Assemblies,Cam_03_LandingGearWheelAssemblies,Conduct a detailed visual check of the Landing Gear Wheel Assemblies for condition and security.
-04_TireInspection,Nose and Main Landing Gear Tire Inspection,Cam_04_TireInspection,"Check the condition of the tires. Check for wear, damage, air leaks, abrasions, unusual worn areas, tread cuts, flat spots and skid burns, presence of contaminants, any cracks or cuts in the grooves, tread, shoulders or sidewalls, blisters, bulges or other signs of ply separation in the tread, shoulder or sidewall area, and bead damage. Check the rim for cracks and hardware integrity."
+Ensure that everything is in good condition and looks as it should, and that there are no nicks and all areas are secure.",Service Check 2
+03_LandingGearWheelAssemblies,Landing Gear Wheel Assemblies,Cam_03_LandingGearWheelAssemblies,Conduct a detailed visual check of the Landing Gear Wheel Assemblies for condition and security.,Service Check 3
+04_TireInspection,Nose and Main Landing Gear Tire Inspection,Cam_04_TireInspection,"Check the condition of the tires. Check for wear, damage, air leaks, abrasions, unusual worn areas, tread cuts, flat spots and skid burns, presence of contaminants, any cracks or cuts in the grooves, tread, shoulders or sidewalls, blisters, bulges or other signs of ply separation in the tread, shoulder or sidewall area, and bead damage. Check the rim for cracks and hardware integrity.",Service Check 4
 05_TirePressureCheck,Landing Gear Tire Pressure Check,Cam_05_TirePressureCheck,"Visually check the tire inflation for correct pressure: 
-1. Wait a minimum of 2 hours after a flight to allow the tires to cool. 
-2. Check the tire inflation pressure with an accurate gauge. 
-3. Compare the measured pressure to the nominal service pressure. 
-Note: Reference a current document while performing the work."
+1. Wait a minimum of 2 hours after a flight to allow the tires to cool.
+2. Check the tire inflation pressure with an accurate gauge.
+3. Compare the measured pressure to the nominal service pressure.
+Note: Reference a current document while performing the work.",Service Check 5
 06_BrakeWearPinsSetup,Landing Gear Brake Wear Pin Protrusion with Brakes Applied,Cam_06_BrakeWearPinsSetup,"Start by setting the brake to get the pressure. 
 1. Make sure the tires have chocks installed around them. 
 2. Release the parking brake. Note: Set the parking brake and measure brake wear as applicable to your station policy. (This covers Guam and other exceptions.) 
@@ -18,31 +18,31 @@ Note: Reference a current document while performing the work."
 4. Fully push the captainâ€™s left and right pedals and hold. 
 5. Measure the pressure and record it. For each brake, make sure the wear indicator pins extend out of the guides. 
 6. Turn off the pumps by removing system B hydraulic power; this removes pressure from the brakes.
-Note: Reference the Aircraft Maintenance Manual if additional clarification is needed. "
-07_BrakeWearPinsMeasurement,Landing Gear Brake Wear Pin Protrusion with Brakes Applied (2),Cam_07_BrakeWearPinsMeasurement,"For each brake, make sure the wear indicator pins extend out of the guides. If two wear pins are present, always use the pin with the shorter length to determine if the brake is serviceable. For accuracy, the wear indicator pins should be checked after the brakes have cooled. 
-Note: Measurements are taken with the brakes set."
-08_LandingGearBrakes,Landing Gear Brakes,Cam_08_LandingGearBrakes,The Landing Gear Brakes must be visually inspected to ensure they are in good condition and all components are secure.
+Note: Reference the Aircraft Maintenance Manual if additional clarification is needed. ",Service Check 6
+07_BrakeWearPinsMeasurement,Landing Gear Brake Wear Pin Protrusion with Brakes Applied,Cam_07_BrakeWearPinsMeasurement,"For each brake, make sure the wear indicator pins extend out of the guides. If two wear pins are present, always use the pin with the shorter length to determine if the brake is serviceable. For accuracy, the wear indicator pins should be checked after the brakes have cooled. 
+Note: Measurements are taken with the brakes set.",Service Check 7
+08_LandingGearBrakes,Landing Gear Brakes,Cam_08_LandingGearBrakes,The Landing Gear Brakes must be visually inspected to ensure they are in good condition and all components are secure.,Service Check 8
 09_GearStruts,Gear Struts,Cam_09_GearStruts,"Check that Gear Struts are in good condition, secure, have proper extension, that there are no leaks, there is proper inflation, only acceptable wear, and no excessive damage. 
 The Gear Struts components that require inspection include the Hydraulic Plumbing and Shimmy Damper (as applicable). 
-Note: The Nose Gear does not have a Shimmy Damper."
-10_StrutCylinders,Landing Gear Strut Cylinders,Cam_10_StrutCylinders,"Clean and wipe the exposed Landing Gear Strut Cylinders with hydraulic fluid, BMS3-32 Type II. Cleaning this area helps prevent seal leaks."
-11_CargoCompartmentPanels,"Cargo Compartment Floor, Ceiling, and Sidewall Panels",Cam_11_CargoCompartmentPanels,"Conduct a general visual inspection which includes condition, security, holes and tears, and security of seam tape."
-12_FuselageTailWings,"Fuselage, Tail Section, and Wings",Cam_12_FuselageTailWings,"• Look for anything that may be out of the ordinary like dings, scratches, or other damage. 
-• Tail Section includes the Horizontal Stabilizer, Elevator, Vertical Stabilizer, and Rudder. 
-Note: Perform the inspection from the ground."
-13_FuelTankSump_MainTanks,Fuel Tank Sump Drain â€“ Sumping operation for the No. 1 & No. 2 Main Tanks and Surge Tanks,Cam_13_FuelTankSump_MainTanks,"1. Put the top end of the fuel sumping tool, V802 against the bottom side of the poppet on the sump drain valve. Push the tool up and turn it until the tabs on the tool hold it in the correct position and fuel flows into the container. 
+Note: The Nose Gear does not have a Shimmy Damper.",Service Check 9
+10_StrutCylinders,Landing Gear Strut Cylinders,Cam_10_StrutCylinders,"Clean and wipe the exposed Landing Gear Strut Cylinders with hydraulic fluid, BMS3-32 Type II. Cleaning this area helps prevent seal leaks.",Service Check 10
+11_CargoCompartmentPanels,"Cargo Compartment Floor, Ceiling, and Sidewall Panels",Cam_11_CargoCompartmentPanels,"Conduct a general visual inspection which includes condition, security, holes and tears, and security of seam tape.",Service Check 11
+12_FuselageTailWings,"Fuselage, Tail Section, and Wings",Cam_12_FuselageTailWings,"•  Look for anything that may be out of the ordinary like dings, scratches, or other damage.
+•  Tail Section includes the Horizontal Stabilizer, Elevator, Vertical Stabilizer, and Rudder.
+Note: Perform the inspection from the ground.",Service Check 12
+13_FuelTankSump_MainTanks,Fuel Tank Sump Drain â€“ Sumping operation for the No. 1 & No. 2 Main Tanks and Surge Tanks,Cam_13_FuelTankSump_MainTanks,"1.  Put the top end of the fuel sumping tool, V802 against the bottom side of the poppet on the sump drain valve. Push the tool up and turn it until the tabs on the tool hold it in the correct position and fuel flows into the container. 
 2. Drain each sump until the fuel that flows into the container has no water. 
 3. Remove the sumping tool from the sump and permit the valve to close. 
-Note: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel."
+Note: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel.",Service Check 13
 14_FuelTankSump_CenterTank,Fuel Tank Sump Drain â€“ Sumping operation for the Center Tank,Cam_14_FuelTankSump_CenterTank,"1. To drain the maximum quantity of water from the center tank sump, put the airplane in as level an attitude as possible. There is a bubble level in both directions in the wheel well. 
 2. Open access panel 192G. 
 3. Pull the actuating rod down. 
 4. Release the rod to close the sump drain valve. 
 5. Do a visual inspection of the fuel in the fuel resistant 5 gallon container. 
-Note: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel."
+Note: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel.",Service Check 14
 15_ElectronicLogbook,Electronic Log Book (ELB) and all non-routine forms and required inspection items,Cam_15_ElectronicLogbook,"Toward the end of the Walk-Around check that all transactions have been cleared and records have been done.
-Ensure all ""transactions have been cleared"" and that items that needed attention are addressed."
+Ensure all ""transactions have been cleared"" and that items that needed attention are addressed.",Service Check 15
 16_SDR_Review,Review all discrepancies recorded and initiate SFR and Service Difficulty Reports (SDR) as required,Cam_16_SDR_Review,"• Review all discrepancies and ensure nothing gets overlooked. 
 • Anything that goes wrong must be written up. 
-• List items that are being fixed or deferred for later work."
-17_MaintenanceSignoff,Aircraft Maintenance Records,Cam_17_MaintenanceSignoff,Sign-off the release.
+• List items that are being fixed or deferred for later work.",Service Check 16
+17_MaintenanceSignoff,Aircraft Maintenance Records,Cam_17_MaintenanceSignoff,Sign-off the release.,Service Check 17

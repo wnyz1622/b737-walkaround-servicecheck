@@ -611,12 +611,14 @@ canvas {
     font-weight: 500;
     color: #333;
     /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
-    width: 600px;
+    width: 200px;
     height: 24px;
     text-align: center;
     line-height: 1.2;
     overflow: hidden;
+    text-overflow: ellipsis;
     word-wrap: break-word;
+    white-space: normal;
     /* Container for vertical centering */
     display: flex;
     align-items: center;
@@ -633,7 +635,9 @@ canvas {
 @media (max-width: 600px) {
     .hotspot-title-display {
         width: 200px;
-        overflow-y: hidden;
+        height: 24px;
+ 
+        
     }
 }
 
@@ -673,7 +677,7 @@ canvas {
 
 /* Container (hidden by default) */
 #checklist-container {
-    display: none;
+    display: block;
     position: absolute;
     top: 56px;
     /* adjust to match your header height */

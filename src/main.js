@@ -152,7 +152,7 @@ class HotspotManager {
         this.scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(0, 10, 0);
+        directionalLight.position.set(0, 100, 0);
         directionalLight.intensity = 1.75; // more shadow strength
         directionalLight.castShadow = true;
 
@@ -160,14 +160,21 @@ class HotspotManager {
         directionalLight.shadow.mapSize.width = 512;
         directionalLight.shadow.mapSize.height = 512;
         directionalLight.shadow.radius = 4;
-        directionalLight.shadow.bias = -0.001;
-        directionalLight.shadow.camera.near = 0.5;
+        directionalLight.shadow.bias = -0.0005;
+
+        directionalLight.shadow.camera.near = 0.1;
         directionalLight.shadow.camera.far = 100;
-        directionalLight.shadow.camera.left = -25;
-        directionalLight.shadow.camera.right = 25;
-        directionalLight.shadow.camera.top = 25;
-        directionalLight.shadow.camera.bottom = -25;
+        directionalLight.shadow.camera.left = -50;
+        directionalLight.shadow.camera.right = 50;
+        directionalLight.shadow.camera.top = 50;
+        directionalLight.shadow.camera.bottom = -50;
         directionalLight.shadow.normalBias = 0.02;
+
+        //Visualize the shadow frustum
+        // const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+        // this.scene.add(helper);
+
+        directionalLight.shadow.camera.updateProjectionMatrix();
         this.scene.add(directionalLight);
         //composer
         // Setup composer only if not mobile
@@ -239,15 +246,15 @@ class HotspotManager {
         this.controls.minDistance = 0.1; // Minimum zoom distance
         this.controls.maxDistance = 80; // Maximum zoom distance
         this.controls.minPolarAngle = Math.PI / 6; // Minimum vertical angle (30 degrees)
-        this.controls.maxPolarAngle = Math.PI / 2; // Maximum vertical angle (120 degrees)
+        this.controls.maxPolarAngle = Math.PI / 1.6; // Maximum vertical angle (120 degrees)
         // this.controls.minAzimuthAngle = -Math.PI; // Allow full 360 rotation
         //this.controls.maxAzimuthAngle = Math.PI;
         this.controls.enablePan = true; // Disable panning to keep focus on the model
         this.controls.target.y = 0; // Keep the orbit target at floor level
         // Keep target from going below floor
         this.controls.addEventListener('change', () => {
-            if (this.controls.target.y < -0.5) {
-                this.controls.target.y = -0.5;
+            if (this.controls.target.y < 0) {
+                this.controls.target.y = 0;
             }
         });
         // Track camera/controls changes for hotspot update
@@ -354,7 +361,7 @@ class HotspotManager {
             };
 
 
-            const modelPath = 'media/model/b737_callouts_v1.glb';
+            const modelPath = 'media/model/b737_callouts_v2.glb';
             console.log('Loading model from:', modelPath);
 
             // this.loader.load(modelPath, (gltf) => {
@@ -527,7 +534,7 @@ class HotspotManager {
                     let cameraZ = Math.abs(maxDim / Math.tan(fov / 2));
                     // Enforce a comfortable default reset distance (e.g., z=2)
                     const defaultResetDistance = 30;
-                    this.camera.position.set(-450, 200, cameraZ*2);
+                    this.camera.position.set(-450, 200, cameraZ * 2);
                     this.camera.lookAt(0, 0, 0);
                     this.camera.updateProjectionMatrix();
 
@@ -741,6 +748,9 @@ class HotspotManager {
                 header: true,
                 complete: results => {
                     // filter out empty rows
+                    // 🔹 Filter out empty or undefined rows
+                    this.checklistData = results.data.filter(row => row.node && row.displayTitle);
+
                     const cleaned = results.data.filter(row => row.node && row.title);
                     resolve(cleaned);
                 },
@@ -772,6 +782,12 @@ class HotspotManager {
 
                 container.classList.add("active");
                 const cameraNode = this.model.getObjectByName(camData.camera);
+                // match Blender FOV
+                if (cameraNode && cameraNode.isCamera) {
+                    this.camera.fov = THREE.MathUtils.radToDeg(cameraNode.fov);
+                    this.camera.updateProjectionMatrix();
+                }
+
                 if (!cameraNode || !cameraNode.isCamera) {
                     console.warn('❌ Camera not found:', camData.camera);
                     return;
@@ -924,6 +940,7 @@ class HotspotManager {
                 <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
                 <div class="text-scroll">
                     <div class="hotspot-title">${hotspotData.title}</div>
+
                     ${isMobileView ? `<div class="hotspot-description">${hotspotData.description}</div>` : ''}
                 </div>
                 <div class="bottom-blocker"></div>
@@ -1039,7 +1056,8 @@ class HotspotManager {
     updateTitleDisplay() {
         const titleDisplay = document.getElementById('currentHotspotTitle');
         if (this.allHotspots && this.allHotspots.length > 0) {
-            titleDisplay.innerHTML = `<span>${this.allHotspots[this.currentHotspotIndex].title}</span>`;
+            const hotspot = this.allHotspots[this.currentHotspotIndex];
+            titleDisplay.innerHTML = `<span>${hotspot.displayTitle || hotspot.title}</span>`;
         }
     }
 
@@ -1356,6 +1374,8 @@ class HotspotManager {
         this.completedSteps = new Set();
 
         data.forEach((step, index) => {
+            //skip empty rows
+            if (!step || !step.node) return;
             const li = document.createElement('li');
             li.classList.add('step-item');
 
@@ -1452,42 +1472,60 @@ class HotspotManager {
         const button = document.getElementById('checklistBtn');
         const icon = document.getElementById('checklistIcon');
         const closeIcon = document.getElementById('closeChecklistIcon');
+        const checklistContainer = document.getElementById('checklist-container');
 
-        let isVisible = false;
-         
+        // Check if it's mobile (width ≤ 600px)
+        const isMobileView = window.innerWidth <= 600;
+
+        // Set initial visibility: show for desktop, hide for mobile
+        let isVisible = !isMobileView;
+
+        if (isVisible) {
+            checklistContainer.style.display = 'block';
+            icon.src = 'media/checklist_active.svg';
+        } else {
+            checklistContainer.style.display = 'none';
+            icon.src = 'media/checklist_default.svg';
+        }
+
+        // Build checklist immediately (so it's ready either way)
+        this.buildChecklistUI().then(() => {
+            this.checklistBuilt = true;
+        });
+
+        const hideChecklist = () => {
+            checklistContainer.style.display = 'none';
+            icon.src = 'media/checklist_default.svg';
+        };
+
         const showChecklist = async () => {
-            // Close specModal if it's open
-            const specModal = document.getElementById('specModal');
-            if (specModal) {
-                specModal.style.display = 'none';
-            }
-            // Show checklist container
-            document.getElementById('checklist-container').style.display = 'block';
+            checklistContainer.style.display = 'block';
             icon.src = 'media/checklist_active.svg';
 
-            // Build checklist if not already built
+            // Build checklist only if not already built
             if (!this.checklistBuilt) {
-                await this.buildChecklistUI(); // function to populate steps
+                await this.buildChecklistUI();
                 this.checklistBuilt = true;
             }
         };
 
-        const hideChecklist = () => {
-            // Hide checklist container
-            document.getElementById('checklist-container').style.display = 'none';
-            icon.src = 'media/checklist_default.svg';
-        };
+        // Close icon hides checklist
+        closeIcon.addEventListener('click', () => {
+            hideChecklist();
+            isVisible = false;
+        });
 
-        closeIcon.addEventListener('click', hideChecklist);
-        button.addEventListener('click', () => {
+        // Toggle on icon button click
+        button.addEventListener('click', async () => {
             if (isVisible) {
                 hideChecklist();
             } else {
-                showChecklist();
+                await showChecklist();
             }
             isVisible = !isVisible;
         });
     }
+
 
     setupResetButton() {
         const button = document.getElementById('resetBtn');
