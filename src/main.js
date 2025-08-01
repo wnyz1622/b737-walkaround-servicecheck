@@ -65,6 +65,10 @@ class HotspotManager {
         this.controlsChanged = true;
         this.lastCameraPosition = new THREE.Vector3();
         this.lastCameraQuaternion = new THREE.Quaternion();
+
+        this.isMuted = false;
+        this.isPaused = false;
+        this.currentAudio = null;
     }
 
     async init() {
@@ -303,6 +307,8 @@ class HotspotManager {
         //this.setupTechSpecToggle();
         this.setupResetButton();
         this.setupChecklistButton();
+        this.setupPlayPauseButton();
+        this.setupMuteButton();
         //this.setupPDFButton();
 
         //test outliene box
@@ -604,7 +610,28 @@ class HotspotManager {
 
     handleHotspotClick(hotspot) {
         const hotspotData = hotspot.data;
+        // Stop any currently playing audio
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio.currentTime = 0;
+            this.currentAudio = null;
+        }
 
+        // Play audio for the current hotspot
+        if (hotspotData.audio && !this.isMuted) {
+            this.currentAudio = new Audio(hotspotData.audio);
+
+            this.currentAudio.addEventListener('ended', () => {
+                this.isPaused = false;
+                document.getElementById('playPauseIcon').src = 'media/Play_default.svg';
+            });
+
+            this.currentAudio.play();
+            this.isPaused = false;
+
+            // Set icon to pause
+            document.getElementById('playPauseIcon').src = 'media/Pause_default.svg';
+        }
         // Deselect previous
         if (this.selectedHotspot && this.selectedHotspot !== hotspot) {
             this.visitedHotspots.add(this.selectedHotspot);
@@ -1579,6 +1606,75 @@ class HotspotManager {
 
         button.addEventListener('mouseleave', () => {
             icon.src = 'media/Reset_default.svg';
+        });
+    }
+
+    setupPlayPauseButton() {
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (this.currentAudio) {
+                if (this.currentAudio.paused) {
+                    this.currentAudio.play();
+                    this.isPaused = false;
+                    playPauseIcon.src = 'media/Pause_default.svg';
+                } else {
+                    this.currentAudio.pause();
+                    this.isPaused = true;
+                    playPauseIcon.src = 'media/Play_default.svg';
+                }
+            }
+        });
+        // 🔹 Add hover events
+        playPauseBtn.addEventListener('mouseenter', () => {
+            if (this.currentAudio && !this.currentAudio.paused) {
+                playPauseIcon.src = 'media/Pause_active.svg';
+            } else {
+                playPauseIcon.src = 'media/Play_active.svg';
+            }
+        });
+
+        playPauseBtn.addEventListener('mouseleave', () => {
+            if (this.currentAudio && !this.currentAudio.paused) {
+                playPauseIcon.src = 'media/Pause_default.svg';
+            } else {
+                playPauseIcon.src = 'media/Play_default.svg';
+            }
+        });
+    }
+    setupMuteButton() {
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = document.getElementById('muteIcon');
+
+        muteBtn.addEventListener('click', () => {
+            this.isMuted = !this.isMuted;
+
+            if (this.isMuted) {
+                if (this.currentAudio) {
+                    this.currentAudio.pause();
+                    this.currentAudio.currentTime = 0;
+                }
+                muteIcon.src = 'media/Mute_default.svg';
+            } else {
+                muteIcon.src = 'media/Unmute_default.svg';
+                // Optionally auto-restart audio if not paused
+                if (this.currentAudio && !this.isPaused) {
+                    this.currentAudio.play();
+                }
+            }
+        });
+        // 🔹 Add hover events
+        muteBtn.addEventListener('mouseenter', () => {
+            muteIcon.src = this.isMuted
+                ? 'media/Mute_active.svg'
+                : 'media/Unmute_active.svg';
+        });
+
+        muteBtn.addEventListener('mouseleave', () => {
+            muteIcon.src = this.isMuted
+                ? 'media/Mute_default.svg'
+                : 'media/Unmute_default.svg';
         });
     }
 
