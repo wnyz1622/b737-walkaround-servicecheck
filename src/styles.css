@@ -292,7 +292,7 @@ canvas {
 }
 
 .progress-bar {
-    width: 200px;
+    width: 400px;
     height: 10px;
     background: #333;
     border-radius: 5px;
@@ -664,8 +664,9 @@ canvas {
 
 #mouse-control {
     position: fixed;
-    right: 24px;
     top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
     transform: translateY(-50%);
     width: 100px;
     height: 90px;
@@ -780,7 +781,16 @@ canvas {
     gap: 10px;
     flex-direction: column;
     padding: 10px;
+    text-indent: -1.4em;
 }
+
+.step-title-text {
+    display: block;
+    padding-left: 1.4em;
+    text-indent: -1.4em;
+    line-height: 1.5;
+}
+
 
 /* Checkbox styling (align left) */
 #checklist li input {
@@ -800,7 +810,7 @@ canvas {
     display: inline-block;
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    margin: 12px;
     background-image: url('media/checkbox_unchecked.svg');
     background-size: contain;
     background-repeat: no-repeat;
@@ -823,7 +833,7 @@ canvas {
 .step-header {
     display: flex;
     margin: 1pt;
-    align-items: center;
+    align-items: flex-start;
     cursor: pointer;
     background-color: #00000031;
     border-radius: 10px;
@@ -846,7 +856,7 @@ canvas {
 .arrow-icon {
     width: 18px;
     height: 18px;
-    margin-left: 10px;
+    margin: 12px;
     background-image: url('media/UpArrow_default.svg');
     background-size: contain;
     background-repeat: no-repeat;

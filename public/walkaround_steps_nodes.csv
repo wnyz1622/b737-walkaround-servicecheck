@@ -27,8 +27,8 @@ The Gear Struts components that require inspection include the Hydraulic Plumbin
 Note: The Nose Gear does not have a Shimmy Damper.",Service Check 9,media/audio/Boeing737NG_2ServiceCheck_11.mp3
 10_StrutCylinders,Landing Gear Strut Cylinders,Cam_10_StrutCylinders,"Clean and wipe the exposed Landing Gear Strut Cylinders with hydraulic fluid, BMS3-32 Type II. Cleaning this area helps prevent seal leaks.",Service Check 10,media/audio/Boeing737NG_2ServiceCheck_12.mp3
 11_CargoCompartmentPanels,"Cargo Compartment Floor, Ceiling, and Sidewall Panels",Cam_11_CargoCompartmentPanels,"Conduct a general visual inspection which includes condition, security, holes and tears, and security of seam tape.",Service Check 11,media/audio/Boeing737NG_2ServiceCheck_13.mp3
-12_FuselageTailWings,"Fuselage, Tail Section, and Wings",Cam_12_FuselageTailWings,"•  Look for anything that may be out of the ordinary like dings, scratches, or other damage.
-•  Tail Section includes the Horizontal Stabilizer, Elevator, Vertical Stabilizer, and Rudder.
+12_FuselageTailWings,"Fuselage, Tail Section, and Wings",Cam_12_FuselageTailWings,"- Look for anything that may be out of the ordinary like dings, scratches, or other damage.
+- Tail Section includes the Horizontal Stabilizer, Elevator, Vertical Stabilizer, and Rudder.
 Note: Perform the inspection from the ground.",Service Check 12,media/audio/Boeing737NG_2ServiceCheck_14.mp3
 13_FuelTankSump_MainTanks,Fuel Tank Sump Drain â€“ Sumping operation for the No. 1 & No. 2 Main Tanks and Surge Tanks,Cam_13_FuelTankSump_MainTanks,"1.  Put the top end of the fuel sumping tool, V802 against the bottom side of the poppet on the sump drain valve. Push the tool up and turn it until the tabs on the tool hold it in the correct position and fuel flows into the container. 
 2. Drain each sump until the fuel that flows into the container has no water. 
@@ -42,7 +42,7 @@ Note: Sumping removes condensation from the bottom of the tank and ensures there
 Note: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel.",Service Check 14,media/audio/Boeing737NG_2ServiceCheck_16.mp3
 15_ElectronicLogbook,Electronic Log Book (ELB) and all non-routine forms and required inspection items,Cam_15_ElectronicLogbook,"Toward the end of the Walk-Around check that all transactions have been cleared and records have been done.
 Ensure all ""transactions have been cleared"" and that items that needed attention are addressed.",Service Check 15,media/audio/Boeing737NG_2ServiceCheck_17.mp3
-16_SDR_Review,Review all discrepancies recorded and initiate SFR and Service Difficulty Reports (SDR) as required,Cam_16_SDR_Review,"• Review all discrepancies and ensure nothing gets overlooked. 
-• Anything that goes wrong must be written up. 
-• List items that are being fixed or deferred for later work.",Service Check 16,media/audio/Boeing737NG_2ServiceCheck_18.mp3
+16_SDR_Review,Review all discrepancies recorded and initiate SFR and Service Difficulty Reports (SDR) as required,Cam_16_SDR_Review,"-  Review all discrepancies and ensure nothing gets overlooked. 
+- Anything that goes wrong must be written up. 
+-  List items that are being fixed or deferred for later work.",Service Check 16,media/audio/Boeing737NG_2ServiceCheck_18.mp3
 17_MaintenanceSignoff,Aircraft Maintenance Records,Cam_17_MaintenanceSignoff,Sign-off the release.,Service Check 17,media/audio/Boeing737NG_2ServiceCheck_19.mp3

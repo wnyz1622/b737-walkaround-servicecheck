@@ -24,6 +24,12 @@ window.addEventListener('unhandledrejection', (e) => {
     console.error('💥 PROMISE CRASH:', e.reason);
     alert('PROMISE ERROR: ' + e.reason);
 });
+
+function formatList(text) {
+    return (text || '').split('\n').map(line => line.trim()).join('<br>');
+  }
+
+
 class HotspotManager {
     constructor() {
         this.init();
@@ -139,25 +145,25 @@ class HotspotManager {
         }, false);
 
         // Add right-center SVG arrow
-        const rightArrow = document.createElement('img');
-        rightArrow.src = 'media/MouseControl.svg'; // adjust path if needed
-        rightArrow.id = 'mouse-control';
-        document.body.appendChild(rightArrow);
+        const MouseControl = document.createElement('img');
+        MouseControl.src = 'media/MouseControl.svg'; // adjust path if needed
+        MouseControl.id = 'mouse-control';
+        document.body.appendChild(MouseControl);
 
         // 🔆 Enable tone mapping and adjust exposure
         this.renderer.toneMapping = THREE.LinearToneMapping; // or THREE.ReinhardToneMapping
-        this.renderer.toneMappingExposure = 0.95; // adjust brightness here (try 1.2–2.0)
+        this.renderer.toneMappingExposure = 1; // adjust brightness here (try 1.2–2.0)
         this.renderer.outputEncoding = SRGBColorSpace;
         this.renderer.toneMapping = THREE.LinearToneMapping;
 
 
         // Add lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(0, 100, 0);
-        directionalLight.intensity = 1.75; // more shadow strength
+        directionalLight.intensity = 1; // more shadow strength
         directionalLight.castShadow = true;
 
         // Add these shadow properties
@@ -320,7 +326,7 @@ class HotspotManager {
         // this.outlineEffect.selection.set([test]);
         this.stats = new Stats();
         //hide fps on screen
-        //document.body.appendChild(this.stats.dom);
+        document.body.appendChild(this.stats.dom);
         // Start animation loop
         this.clock = new THREE.Clock();
         this.animate();
@@ -367,7 +373,7 @@ class HotspotManager {
             };
 
 
-            const modelPath = 'media/model/b737_callouts_v2.glb';
+            const modelPath = 'media/model/b737_callouts_v3.glb';
             console.log('Loading model from:', modelPath);
 
             // this.loader.load(modelPath, (gltf) => {
@@ -518,9 +524,17 @@ class HotspotManager {
                                         mat[mapType].needsUpdate = true;
                                     }
                                 });
+                    
+                                // ✅ Clearcoat check
+                                // if ('clearcoat' in mat) {
+                                //     console.log('✅ This material uses clearcoat.');
+                                //     console.log('Clearcoat:', mat.clearcoat);
+                                //     console.log('Clearcoat Roughness:', mat.clearcoatRoughness);
+                                // }
                             });
                         }
                     });
+                    
 
                     //Center model
                     const box = new THREE.Box3().setFromObject(this.model);
@@ -775,8 +789,11 @@ class HotspotManager {
                 header: true,
                 complete: results => {
                     // filter out empty rows
-                    // 🔹 Filter out empty or undefined rows
-                    this.checklistData = results.data.filter(row => row.node && row.displayTitle);
+                    this.checklistData = results.data.filter(row =>
+                        row.node?.trim() && row.title?.trim()
+                    );
+                    
+                    console.log(`Checklist steps loaded: ${this.checklistData.length}`);
 
                     const cleaned = results.data.filter(row => row.node && row.title);
                     resolve(cleaned);
@@ -1417,7 +1434,8 @@ class HotspotManager {
             const stepNumber = index + 1;
             const titleRow = document.createElement('div');
             titleRow.className = 'step-title';
-            titleRow.textContent = `${stepNumber}. ${step.title}`;
+            titleRow.innerHTML = `<span class="step-title-text">${stepNumber}. ${step.title}</span>`;
+
 
             const arrow = document.createElement('span');
             arrow.className = 'arrow-icon'; // arrow icon that rotates
@@ -1432,12 +1450,8 @@ class HotspotManager {
             descRow.textContent = step.description;
 
             // Convert `\n\n` or `\n` into paragraphs
-            const paragraphs = (step.description || '')
-                .split(/\n+/)
-                .map(p => `<p>${p.trim()}</p>`)
-                .join('');
+            descRow.innerHTML = formatList(step.description || '') || '<p>No description available</p>';
 
-            descRow.innerHTML = paragraphs || '<p>No description available</p>';
 
             // Toggle dropdown on header click
             header.addEventListener('click', () => {
@@ -1458,18 +1472,29 @@ class HotspotManager {
                 }
             });
 
-            // Checkbox click only toggles checkbox (don’t toggle dropdown)
+            // Checkbox click expands, checks, and moves to camera
             checkbox.addEventListener('click', (e) => {
                 e.stopPropagation();
-                checkbox.classList.toggle('checked');
 
+                // Expand the checklist item
+                document.querySelectorAll('#checklist li').forEach(item => item.classList.remove('open'));
+                li.classList.add('open');
+
+                // Check/uncheck
+                checkbox.classList.toggle('checked');
                 if (checkbox.classList.contains('checked')) {
                     this.completedSteps.add(index);
                 } else {
                     this.completedSteps.delete(index);
                 }
-
                 this.updateProgress();
+
+                // Move camera and show hotspot
+                const step = this.checklistData[index];
+                const hotspot = this.hotspots.find(h => h.data.node === step.node);
+                if (hotspot) {
+                    this.handleHotspotClick(hotspot); // handles camera move + info display
+                }
             });
 
             // Clicking title/camera jump auto-checks + opens dropdown
@@ -1650,20 +1675,18 @@ class HotspotManager {
         muteBtn.addEventListener('click', () => {
             this.isMuted = !this.isMuted;
 
-            if (this.isMuted) {
-                if (this.currentAudio) {
-                    this.currentAudio.pause();
-                    this.currentAudio.currentTime = 0;
-                }
-                muteIcon.src = 'media/Mute_default.svg';
-            } else {
-                muteIcon.src = 'media/Unmute_default.svg';
-                // Optionally auto-restart audio if not paused
-                if (this.currentAudio && !this.isPaused) {
-                    this.currentAudio.play();
+            if (this.currentAudio) {
+                if (this.isMuted) {
+                    this.previousVolume = this.currentAudio.volume || 1; // Save current volume
+                    this.currentAudio.volume = 0;
+                    muteIcon.src = 'media/Mute_default.svg';
+                } else {
+                    this.currentAudio.volume = this.previousVolume || 1;
+                    muteIcon.src = 'media/Unmute_default.svg';
                 }
             }
         });
+
         // 🔹 Add hover events
         muteBtn.addEventListener('mouseenter', () => {
             muteIcon.src = this.isMuted
@@ -1677,6 +1700,7 @@ class HotspotManager {
                 : 'media/Unmute_default.svg';
         });
     }
+
 
     setupTechSpecToggle() {
         const button = document.getElementById('techSpecBtn');
