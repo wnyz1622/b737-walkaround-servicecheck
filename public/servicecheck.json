@@ -1,0 +1,138 @@
+[
+    {
+      "node": "01_EngineCowlings",
+      "title": "Engine Cowlings, Pylons, Drains, and Nose Cowling",
+      "camera": "Cam_01_EngineCowlings",
+      "description": "Start with a general visual check of the exterior areas of the Engine Cowlings, Pylons, Drains, and Nose Cowling looking for the condition security, any fluid leaks or damage, and any other conditions or concerns. \nEnsure the condition is good and everything looks as it should; there are no nicks and all areas are secure.\nAlways check for anything that could get sucked into the engine and cause damage.",
+      "displayTitle": "Service Check 1",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_03.mp3"
+    },
+    {
+      "node": "02_EngineExhaust",
+      "title": "Engine Exhaust Area",
+      "camera": "Cam_02_EngineExhaust",
+      "description": "A general visual inspection of the Engine Exhaust includes checking the condition and security, any evidence of foreign object damage, commonly known as FOD, oil stains, obvious defects, and any other conditions or concerns. \nEnsure that everything is in good condition and looks as it should, and that there are no nicks and all areas are secure.",
+      "displayTitle": "Service Check 2",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_04.mp3"
+    },
+    {
+      "node": "03_LandingGearWheelAssemblies",
+      "title": "Landing Gear Wheel Assemblies",
+      "camera": "Cam_03_LandingGearWheelAssemblies",
+      "description": "Conduct a detailed visual check of the Landing Gear Wheel Assemblies for condition and security.",
+      "displayTitle": "Service Check 3",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_05.mp3"
+    },
+    {
+      "node": "04_TireInspection",
+      "title": "Nose and Main Landing Gear Tire Inspection",
+      "camera": "Cam_04_TireInspection",
+      "description": "Check the condition of the tires. Check for wear, damage, air leaks, abrasions, unusual worn areas, tread cuts, flat spots and skid burns, presence of contaminants, any cracks or cuts in the grooves, tread, shoulders or sidewalls, blisters, bulges or other signs of ply separation in the tread, shoulder or sidewall area, and bead damage. Check the rim for cracks and hardware integrity.",
+      "displayTitle": "Service Check 4",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_06.mp3"
+    },
+    {
+      "node": "05_TirePressureCheck",
+      "title": "Landing Gear Tire Pressure Check",
+      "camera": "Cam_05_TirePressureCheck",
+      "description": "Visually check the tire inflation for correct pressure: \n1. Wait a minimum of 2 hours after a flight to allow the tires to cool.\n2. Check the tire inflation pressure with an accurate gauge.\n3. Compare the measured pressure to the nominal service pressure.\nNote: Reference a current document while performing the work.",
+      "displayTitle": "Service Check 5",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_07.mp3"
+    },
+    {
+      "node": "06_BrakeWearPinsSetup",
+      "title": "Landing Gear Brake Wear Pin Protrusion with Brakes Applied",
+      "camera": "Cam_06_BrakeWearPinsSetup",
+      "description": "Start by setting the brake to get the pressure. \n1. Make sure the tires have chocks installed around them. \n2. Release the parking brake. Note: Set the parking brake and measure brake wear as applicable to your station policy. (This covers Guam and other exceptions.) \n3. Turn on the hydraulic pumps by supplying system B hydraulic power. \n4. Fully push the captain’s left and right pedals and hold. \n5. Measure the pressure and record it. For each brake, make sure the wear indicator pins extend out of the guides. \n6. Turn off the pumps by removing system B hydraulic power; this removes pressure from the brakes.\nNote: Reference the Aircraft Maintenance Manual if additional clarification is needed. ",
+      "displayTitle": "Service Check 6",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_08.mp3"
+    },
+    {
+      "node": "07_BrakeWearPinsMeasurement",
+      "title": "Landing Gear Brake Wear Pin Protrusion with Brakes Applied",
+      "camera": "Cam_07_BrakeWearPinsMeasurement",
+      "description": "For each brake, make sure the wear indicator pins extend out of the guides. If two wear pins are present, always use the pin with the shorter length to determine if the brake is serviceable. For accuracy, the wear indicator pins should be checked after the brakes have cooled. \nNote: Measurements are taken with the brakes set.",
+      "displayTitle": "Service Check 7",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_09.mp3"
+    },
+    {
+      "node": "08_LandingGearBrakes",
+      "title": "Landing Gear Brakes",
+      "camera": "Cam_08_LandingGearBrakes",
+      "description": "The Landing Gear Brakes must be visually inspected to ensure they are in good condition and all components are secure.",
+      "displayTitle": "Service Check 8",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_10.mp3"
+    },
+    {
+      "node": "09_GearStruts",
+      "title": "Gear Struts",
+      "camera": "Cam_09_GearStruts",
+      "description": "Check that Gear Struts are in good condition, secure, have proper extension, that there are no leaks, there is proper inflation, only acceptable wear, and no excessive damage. \nThe Gear Struts components that require inspection include the Hydraulic Plumbing and Shimmy Damper (as applicable). \nNote: The Nose Gear does not have a Shimmy Damper.",
+      "displayTitle": "Service Check 9",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_11.mp3"
+    },
+    {
+      "node": "10_StrutCylinders",
+      "title": "Landing Gear Strut Cylinders",
+      "camera": "Cam_10_StrutCylinders",
+      "description": "Clean and wipe the exposed Landing Gear Strut Cylinders with hydraulic fluid, BMS3-32 Type II. Cleaning this area helps prevent seal leaks.",
+      "displayTitle": "Service Check 10",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_12.mp3"
+    },
+    {
+      "node": "11_CargoCompartmentPanels",
+      "title": "Cargo Compartment Floor, Ceiling, and Sidewall Panels",
+      "camera": "Cam_11_CargoCompartmentPanels",
+      "description": "Conduct a general visual inspection which includes condition, security, holes and tears, and security of seam tape.",
+      "displayTitle": "Service Check 11",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_13.mp3"
+    },
+    {
+      "node": "12_FuselageTailWings",
+      "title": "Fuselage, Tail Section, and Wings",
+      "camera": "Cam_12_FuselageTailWings",
+      "description": "- Look for anything that may be out of the ordinary like dings, scratches, or other damage.\n- Tail Section includes the Horizontal Stabilizer, Elevator, Vertical Stabilizer, and Rudder.\nNote: Perform the inspection from the ground.",
+      "displayTitle": "Service Check 12",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_14.mp3"
+    },
+    {
+      "node": "13_FuelTankSump_MainTanks",
+      "title": "Fuel Tank Sump Drain – Sumping operation for the No. 1 & No. 2 Main Tanks and Surge Tanks",
+      "camera": "Cam_13_FuelTankSump_MainTanks",
+      "description": "1.  Put the top end of the fuel sumping tool, V802 against the bottom side of the poppet on the sump drain valve. Push the tool up and turn it until the tabs on the tool hold it in the correct position and fuel flows into the container. \n2. Drain each sump until the fuel that flows into the container has no water. \n3. Remove the sumping tool from the sump and permit the valve to close. \nNote: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel.",
+      "displayTitle": "Service Check 13",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_15.mp3"
+    },
+    {
+      "node": "14_FuelTankSump_CenterTank",
+      "title": "Fuel Tank Sump Drain – Sumping operation for the Center Tank",
+      "camera": "Cam_14_FuelTankSump_CenterTank",
+      "description": "1. To drain the maximum quantity of water from the center tank sump, put the airplane in as level an attitude as possible. There is a bubble level in both directions in the wheel well. \n2. Open access panel 192G. \n3. Pull the actuating rod down. \n4. Release the rod to close the sump drain valve. \n5. Do a visual inspection of the fuel in the fuel resistant 5 gallon container. \nNote: Sumping removes condensation from the bottom of the tank and ensures there is no water in the fuel.",
+      "displayTitle": "Service Check 14",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_16.mp3"
+    },
+    {
+      "node": "15_ElectronicLogbook",
+      "title": "Electronic Log Book (ELB) and all non-routine forms and required inspection items",
+      "camera": "Cam_15_ElectronicLogbook",
+      "description": "Toward the end of the Walk-Around check that all transactions have been cleared and records have been done.\nEnsure all \"transactions have been cleared\" and that items that needed attention are addressed.",
+      "displayTitle": "Service Check 15",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_17.mp3"
+    },
+    {
+      "node": "16_SDR_Review",
+      "title": "Review all discrepancies recorded and initiate SFR and Service Difficulty Reports (SDR) as required",
+      "camera": "Cam_16_SDR_Review",
+      "description": "-  Review all discrepancies and ensure nothing gets overlooked. \n- Anything that goes wrong must be written up. \n-  List items that are being fixed or deferred for later work.",
+      "displayTitle": "Service Check 16",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_18.mp3"
+    },
+    {
+      "node": "17_MaintenanceSignoff",
+      "title": "Aircraft Maintenance Records",
+      "camera": "Cam_17_MaintenanceSignoff",
+      "description": "Sign-off the release.",
+      "displayTitle": "Service Check 17",
+      "audio": "media/audio/Boeing737NG_2ServiceCheck_19.mp3"
+    }
+  ]

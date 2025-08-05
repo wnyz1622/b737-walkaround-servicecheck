@@ -63,6 +63,7 @@ canvas {
     transition: transform 0.3s ease;
     z-index: 1000;
     pointer-events: auto;
+    user-select: none;
 }
 
 .hotspot:hover {
@@ -431,6 +432,7 @@ canvas {
     border: none;
     cursor: pointer;
     padding: 0;
+    user-select: none;
 }
 
 /* Image style for all buttons */
@@ -570,6 +572,7 @@ canvas {
     align-items: center;
     gap: 10px;
     z-index: 1003;
+    user-select: none;
 }
 
 .nav-button {
@@ -664,16 +667,15 @@ canvas {
 
 #mouse-control {
     position: fixed;
-    top: 100px;
+    top: 60px;
     left: 50%;
-    transform: translateX(-50%);
-    transform: translateY(-50%);
+    transform: translate(-50%, 0);
     width: 100px;
     height: 90px;
     z-index: 1000;
     cursor: pointer;
     opacity: 0.75;
-    transition: opacity 0.2s;
+    user-select: none;
 }
 
 /* Container (hidden by default) */
@@ -781,13 +783,12 @@ canvas {
     gap: 10px;
     flex-direction: column;
     padding: 10px;
-    text-indent: -1.4em;
 }
 
 .step-title-text {
     display: block;
     padding-left: 1.4em;
-    text-indent: -1.4em;
+    text-indent: -1.5em;
     line-height: 1.5;
 }
 
@@ -800,8 +801,8 @@ canvas {
 /* Step description text */
 #checklist .step-description {
     font-size: 14px;
-    color: #bbbbbb;
-    line-height: 1.4;
+    color: #F7F4F2;
+    line-height: 1.5;
     white-space: normal;
     word-wrap: break-word;
 }

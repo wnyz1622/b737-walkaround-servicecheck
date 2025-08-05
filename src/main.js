@@ -26,10 +26,13 @@ window.addEventListener('unhandledrejection', (e) => {
 });
 
 function formatList(text) {
-    return (text || '').split('\n').map(line => line.trim()).join('<br>');
-  }
-
-
+    if (!text || typeof text !== 'string') return '';
+    return text
+        .replace(/\\n/g, '\n') // if you have escaped \n from CSV
+        .split('\n')           // split on real line breaks
+        .map(line => `<p>${line.trim()}</p>`)
+        .join('');
+}
 class HotspotManager {
     constructor() {
         this.init();
@@ -91,8 +94,7 @@ class HotspotManager {
             if (hdrTexture.magFilter !== undefined) hdrTexture.magFilter = THREE.LinearFilter;
             hdrTexture.needsUpdate = true;
             this.scene.environment = hdrTexture;
-            //this.scene.background = hdrTexture;
-            //this.scene.background = new THREE.Color(0xf0f0f0);
+            
         });
 
         // const bgLoader = new THREE.TextureLoader();
@@ -131,7 +133,8 @@ class HotspotManager {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(1);
-        this.renderer.outputEncoding = SRGBColorSpace;
+        this.renderer.physicallyCorrectLights = true;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('container').appendChild(this.renderer.domElement);
@@ -154,7 +157,7 @@ class HotspotManager {
         this.renderer.toneMapping = THREE.LinearToneMapping; // or THREE.ReinhardToneMapping
         this.renderer.toneMappingExposure = 1; // adjust brightness here (try 1.2–2.0)
         this.renderer.outputEncoding = SRGBColorSpace;
-        this.renderer.toneMapping = THREE.LinearToneMapping;
+
 
 
         // Add lights
@@ -326,7 +329,7 @@ class HotspotManager {
         // this.outlineEffect.selection.set([test]);
         this.stats = new Stats();
         //hide fps on screen
-        document.body.appendChild(this.stats.dom);
+        //document.body.appendChild(this.stats.dom);
         // Start animation loop
         this.clock = new THREE.Clock();
         this.animate();
@@ -524,7 +527,7 @@ class HotspotManager {
                                         mat[mapType].needsUpdate = true;
                                     }
                                 });
-                    
+
                                 // ✅ Clearcoat check
                                 // if ('clearcoat' in mat) {
                                 //     console.log('✅ This material uses clearcoat.');
@@ -534,7 +537,7 @@ class HotspotManager {
                             });
                         }
                     });
-                    
+
 
                     //Center model
                     const box = new THREE.Box3().setFromObject(this.model);
@@ -763,6 +766,12 @@ class HotspotManager {
 
                 // Only scroll if the checklist container is visible
                 const checklistContainer = document.getElementById('checklist-container');
+                // Show the checklist panel if it's hidden
+                if (checklistContainer) {
+                    checklistContainer.style.display = 'block';
+                    checklistContainer.classList.remove('hidden'); // optional
+                }
+
                 if (checklistContainer && checklistContainer.style.display === 'block') {
                     li.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
@@ -792,7 +801,7 @@ class HotspotManager {
                     this.checklistData = results.data.filter(row =>
                         row.node?.trim() && row.title?.trim()
                     );
-                    
+
                     console.log(`Checklist steps loaded: ${this.checklistData.length}`);
 
                     const cleaned = results.data.filter(row => row.node && row.title);
