@@ -1624,7 +1624,8 @@ class HotspotManager {
             if (this.selectedHotspot) {
                 this.selectedHotspot.info.classList.remove('active');
                 this.selectedHotspot.info.style.display = 'none';
-                this.selectedHotspot.element.style.backgroundImage = `url('media/Info_visited.png')`;
+                this.selectedHotspot.element.style.backgroundImage = 'none'
+                //this.selectedHotspot.element.style.backgroundImage = `url('media/Info_visited.png')`;
                 this.selectedHotspot = null;
             }
 
