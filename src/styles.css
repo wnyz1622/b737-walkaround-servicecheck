@@ -812,7 +812,7 @@ canvas {
     width: 20px;
     height: 20px;
     margin: 12px;
-    background-image: url('media/checkbox_unchecked.svg');
+    background-image: url('/media/checkbox_unchecked.svg');
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;
@@ -820,7 +820,7 @@ canvas {
 }
 
 .custom-checkbox.checked {
-    background-image: url('media/checkbox_checked.svg');
+    background-image: url('/media/checkbox_checked.svg');
 }
 
 .step-item {
@@ -858,7 +858,7 @@ canvas {
     width: 18px;
     height: 18px;
     margin: 12px;
-    background-image: url('media/UpArrow_default.svg');
+    background-image: url('/media/UpArrow_default.svg');
     background-size: contain;
     background-repeat: no-repeat;
     transition: transform 0.3s ease;

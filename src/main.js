@@ -376,7 +376,7 @@ class HotspotManager {
             };
 
 
-            const modelPath = 'media/model/b737_callouts_v3.glb';
+            const modelPath = 'media/model/b737_callouts_v4.glb';
             console.log('Loading model from:', modelPath);
 
             // this.loader.load(modelPath, (gltf) => {
