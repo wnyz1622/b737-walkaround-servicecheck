@@ -78,6 +78,7 @@ class HotspotManager {
         this.isMuted = false;
         this.isPaused = false;
         this.currentAudio = null;
+        this.previousVolume = 1; // Initialize default volume
     }
 
     async init() {
@@ -635,8 +636,15 @@ class HotspotManager {
         }
 
         // Play audio for the current hotspot
-        if (hotspotData.audio && !this.isMuted) {
+        if (hotspotData.audio) {
             this.currentAudio = new Audio(hotspotData.audio);
+
+            // Set volume based on mute state
+            if (this.isMuted) {
+                this.currentAudio.volume = 0;
+            } else {
+                this.currentAudio.volume = this.previousVolume || 1;
+            }
 
             this.currentAudio.addEventListener('ended', () => {
                 this.isPaused = false;
@@ -1687,11 +1695,20 @@ class HotspotManager {
 
             if (this.currentAudio) {
                 if (this.isMuted) {
-                    this.previousVolume = this.currentAudio.volume || 1; // Save current volume
+                    // Save current volume before muting
+                    this.previousVolume = this.currentAudio.volume > 0 ? this.currentAudio.volume : 1;
                     this.currentAudio.volume = 0;
                     muteIcon.src = 'media/Mute_default.svg';
                 } else {
+                    // Restore previous volume when unmuting
                     this.currentAudio.volume = this.previousVolume || 1;
+                    muteIcon.src = 'media/Unmute_default.svg';
+                }
+            } else {
+                // Update icon even if no current audio
+                if (this.isMuted) {
+                    muteIcon.src = 'media/Mute_default.svg';
+                } else {
                     muteIcon.src = 'media/Unmute_default.svg';
                 }
             }
