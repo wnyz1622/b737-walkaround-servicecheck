@@ -125,18 +125,18 @@ class HotspotManager {
 
         // Create renderer
         this.renderer = new WebGLRenderer({
-            powerPreference: "high-performance",
-            antialias: window.devicePixelRatio <= 1,
+            powerPreference: IS_MOBILE ? "low-power" : "high-performance",
+            antialias: !IS_MOBILE && window.devicePixelRatio <= 1,
             stencil: false,
             depth: true,
             alpha: false,
             //preserveDrawingBuffer: false
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(1);
+        this.renderer.setPixelRatio(IS_MOBILE ? 1 : Math.min(window.devicePixelRatio, 2));
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.enabled = !IS_MOBILE; // Disable shadows on mobile
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('container').appendChild(this.renderer.domElement);
 
@@ -168,65 +168,67 @@ class HotspotManager {
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(0, 100, 0);
         directionalLight.intensity = 1; // more shadow strength
-        directionalLight.castShadow = true;
+        directionalLight.castShadow = !IS_MOBILE;
 
-        // Add these shadow properties
-        directionalLight.shadow.mapSize.width = 512;
-        directionalLight.shadow.mapSize.height = 512;
-        directionalLight.shadow.radius = 4;
-        directionalLight.shadow.bias = -0.0005;
+        if (!IS_MOBILE) {
+            // Add these shadow properties only for desktop
+            directionalLight.shadow.mapSize.width = 512;
+            directionalLight.shadow.mapSize.height = 512;
+            directionalLight.shadow.radius = 4;
+            directionalLight.shadow.bias = -0.0005;
 
-        directionalLight.shadow.camera.near = 0.1;
-        directionalLight.shadow.camera.far = 100;
-        directionalLight.shadow.camera.left = -50;
-        directionalLight.shadow.camera.right = 50;
-        directionalLight.shadow.camera.top = 50;
-        directionalLight.shadow.camera.bottom = -50;
-        directionalLight.shadow.normalBias = 0.02;
-
-        //Visualize the shadow frustum
-        // const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
-        // this.scene.add(helper);
-
-        directionalLight.shadow.camera.updateProjectionMatrix();
+            directionalLight.shadow.camera.near = 0.1;
+            directionalLight.shadow.camera.far = 100;
+            directionalLight.shadow.camera.left = -50;
+            directionalLight.shadow.camera.right = 50;
+            directionalLight.shadow.camera.top = 50;
+            directionalLight.shadow.camera.bottom = -50;
+            directionalLight.shadow.normalBias = 0.02;
+            directionalLight.shadow.camera.updateProjectionMatrix();
+        }
         this.scene.add(directionalLight);
         //composer
         // Setup composer only if not mobile
-        this.composer = new EffectComposer(this.renderer);
-        this.composer.addPass(new RenderPass(this.scene, this.camera));
-        // Postprocessing passes
+        if (!IS_MOBILE) {
+            this.composer = new EffectComposer(this.renderer);
+            this.composer.addPass(new RenderPass(this.scene, this.camera));
+            // Postprocessing passes
 
-        // Create OutlineEffect
-        this.outlineEffect = new OutlineEffect(this.scene, this.camera, {
-            selection: [],
-            blendFunction: BlendFunction.ALPHA,
-            edgeStrength: 2,
-            pulseSpeed: 0.0,
-            visibleEdgeColor: new THREE.Color('#ef5337'), // Start transparent
-            hiddenEdgeColor: new THREE.Color('#ef5337'),
-            multisampling: 4,
-            // resolution: {
-            //     // width: window.innerWidth * Math.min(window.devicePixelRatio, 2),
-            //     // height: window.innerHeight * Math.min(window.devicePixelRatio, 2)
-            // },
-            resolution: { width: window.innerWidth / 2, height: window.innerHeight / 2 },
+            // Create OutlineEffect
+            this.outlineEffect = new OutlineEffect(this.scene, this.camera, {
+                selection: [],
+                blendFunction: BlendFunction.ALPHA,
+                edgeStrength: 2,
+                pulseSpeed: 0.0,
+                visibleEdgeColor: new THREE.Color('#ef5337'), // Start transparent
+                hiddenEdgeColor: new THREE.Color('#ef5337'),
+                multisampling: 4,
+                // resolution: {
+                //     // width: window.innerWidth * Math.min(window.devicePixelRatio, 2),
+                //     // height: window.innerHeight * Math.min(window.devicePixelRatio, 2)
+                // },
+                resolution: { width: window.innerWidth / 2, height: window.innerHeight / 2 },
 
-            xRay: false,
-            // Edge detection settings
-            patternTexture: null,
-            kernelSize: 1,
-            blur: true,
-            edgeGlow: 0.0,
-            usePatternTexture: false
-        });
-        //SMAA
-        const smaaEffect = new SMAAEffect();
-        // Create effect pass with both outline and SMAA
-        const effectPass = new EffectPass(this.camera, this.outlineEffect, smaaEffect);
-        effectPass.renderToScreen = true;
+                xRay: false,
+                // Edge detection settings
+                patternTexture: null,
+                kernelSize: 1,
+                blur: true,
+                edgeGlow: 0.0,
+                usePatternTexture: false
+            });
+            //SMAA
+            const smaaEffect = new SMAAEffect();
+            // Create effect pass with both outline and SMAA
+            const effectPass = new EffectPass(this.camera, this.outlineEffect, smaaEffect);
+            effectPass.renderToScreen = true;
 
-        //add effect pass to composer
-        this.composer.addPass(effectPass);
+            //add effect pass to composer
+            this.composer.addPass(effectPass);
+        } else {
+            // Mobile: Use basic outline effect without postprocessing
+            this.outlineEffect = null;
+        }
 
         // Add floor disc
         const floorGeometry = new THREE.CircleGeometry(70, 48);
@@ -680,6 +682,7 @@ class HotspotManager {
 
             this.selectedHotspot.info.style.display = 'none';
             this.selectedHotspot.info.classList.remove('active');
+            this.selectedHotspot.info.classList.remove('mobile-fixed'); // Remove mobile class
         }
         // Mark current as selected
         if (hotspot.element.classList.contains('hotspot-number')) {
@@ -698,6 +701,12 @@ class HotspotManager {
         // ✅ Always show the info panel, including description
         hotspot.info.style.display = 'block';
         hotspot.info.classList.add('active');
+        
+        // Add mobile-fixed class for mobile layout
+        const isMobileView = window.innerWidth <= 600;
+        if (isMobileView) {
+            hotspot.info.classList.add('mobile-fixed');
+        }
 
         // 🔁 Move to predefined camera position if available
         const cameraNode = this.gltf.scene.getObjectByName('Cam_' + hotspotData.node);
@@ -745,7 +754,7 @@ class HotspotManager {
                 meshesToSelect.push(meshToOutline);
             }
 
-            if (meshesToSelect.length > 0) {
+            if (meshesToSelect.length > 0 && this.outlineEffect) {
                 this.outlineEffect.selection.set(meshesToSelect);
                 this.animateOutlineEdgeStrength(0, 5, 1500);
                 console.log('✔ Outline applied to:', meshesToSelect.map(m => m.name));
@@ -772,10 +781,12 @@ class HotspotManager {
                 this.completedSteps.add(stepIndex);
                 this.updateProgress();
 
-                // Only scroll if the checklist container is visible
+                // Only show checklist on desktop, not mobile
+                const isMobileView = window.innerWidth <= 600;
                 const checklistContainer = document.getElementById('checklist-container');
-                // Show the checklist panel if it's hidden
-                if (checklistContainer) {
+                
+                if (checklistContainer && !isMobileView) {
+                    // Show the checklist panel only on desktop
                     checklistContainer.style.display = 'block';
                     checklistContainer.classList.remove('hidden'); // optional
                 }
@@ -997,12 +1008,22 @@ class HotspotManager {
             // Check if it's mobile or desktop
             const isMobileView = window.innerWidth <= 600;
 
+            // Find matching step description from checklist data
+            let stepDescription = '';
+            if (isMobileView && this.checklistData) {
+                const matchingStep = this.checklistData.find(step => step.node === hotspotData.node);
+                if (matchingStep && matchingStep.description) {
+                    stepDescription = matchingStep.description;
+                }
+            }
+
             infoDiv.innerHTML = `
                 <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
                 <div class="text-scroll">
                     <div class="hotspot-title">${hotspotData.title}</div>
 
-                    ${isMobileView ? `<div class="hotspot-description">${hotspotData.description}</div>` : ''}
+                    ${isMobileView && stepDescription ? `<div class="hotspot-description">${stepDescription}</div>` : 
+                      (isMobileView ? `<div class="hotspot-description">${hotspotData.description || ''}</div>` : '')}
                 </div>
                 <div class="bottom-blocker"></div>
             `;
@@ -1014,6 +1035,7 @@ class HotspotManager {
                 e.stopPropagation();
                 infoDiv.style.display = 'none';
                 infoDiv.classList.remove('active');
+                infoDiv.classList.remove('mobile-fixed'); // Remove mobile class too
 
                 // Deselect logic if you're using this.selectedHotspot
                 if (this.selectedHotspot && this.selectedHotspot.info === infoDiv) {
@@ -1030,10 +1052,7 @@ class HotspotManager {
                     }
 
                     this.selectedHotspot = null;
-                    // Clear outline effect
-                    if (this.outlineEffect && this.outlineEffect.selection) {
-                        this.outlineEffect.selection.clear();
-                    }
+                    
                 }
             });
 
@@ -1330,8 +1349,9 @@ class HotspotManager {
 
 
         // Update composer
-        this.composer.setSize(window.innerWidth, window.innerHeight);
-        //this.composer.setPixelRatio(pixelRatio); // This line was causing the error
+        if (this.composer) {
+            this.composer.setSize(window.innerWidth, window.innerHeight);
+        }
 
         // Update outline effect resolution with proper scaling
         if (this.outlineEffect && this.outlineEffect.resolution) {
@@ -1626,8 +1646,8 @@ class HotspotManager {
             animateReset();
 
             // Reset material variant
-            this.applyMaterialVariant('00_Default');
-            this.outlineEffect.selection.clear();
+            //this.applyMaterialVariant('00_Default');
+            //this.outlineEffect.selection.clear();
             // Hide any open callout
             if (this.selectedHotspot) {
                 this.selectedHotspot.info.classList.remove('active');
@@ -1819,7 +1839,10 @@ class HotspotManager {
         // Disable shadow and tone mapping on mobile for performance
 
         // Pause rendering when page is hidden
-        if (document.hidden) return;
+        if (document.hidden) {
+            requestAnimationFrame(this.animate.bind(this));
+            return;
+        }
         requestAnimationFrame(this.animate.bind(this));
         this.controls.update();
 
@@ -1837,13 +1860,11 @@ class HotspotManager {
         }
 
         //Render using composer (postprocessing effects) if not mobile
-        // if (!IS_MOBILE && this.composer) {
-        //     this.composer.render();
-        // } else {
-        //     this.renderer.render(this.scene, this.camera);
-        // }
-        //this.renderer.render(this.scene, this.camera);
-        this.composer.render();
+        if (!IS_MOBILE && this.composer) {
+            this.composer.render();
+        } else {
+            this.renderer.render(this.scene, this.camera);
+        }
         this.stats.update();
     }
 
