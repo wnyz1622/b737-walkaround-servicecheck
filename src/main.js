@@ -48,16 +48,27 @@ class HotspotManager {
         this.isAnimating = false;
         this.needsUpdate = false;
         this.frameCount = 0;
+        
         // Performance settings
-        this.LOD_DISTANCE = 10;
-        this.CULL_DISTANCE = 50;
-        this.targetFPS = 60;
+        this.LOD_DISTANCE = IS_MOBILE ? 5 : 10;
+        this.CULL_DISTANCE = IS_MOBILE ? 30 : 50;
+        this.targetFPS = IS_MOBILE ? 30 : 60;
+        
         // Raycast optimization
         this.raycastThrottle = 0;
-        this.raycastInterval = 3; // Only raycast every 3 frames
+        this.raycastInterval = IS_MOBILE ? 6 : 3; // Reduce raycast frequency on mobile
         this.lastRaycastResults = new Map();
         this.raycastCache = new Map();
-        this.cacheTimeout = 500; // Cache results for 500ms
+        this.cacheTimeout = IS_MOBILE ? 1000 : 500; // Cache results longer on mobile
+
+        // Animation settings
+        this.animationDuration = IS_MOBILE ? 1000 : 1500; // Shorter animations on mobile
+        this.useSimpleEasing = IS_MOBILE; // Use simpler easing on mobile
+
+        // Texture management
+        this.textureLoader = new THREE.TextureLoader();
+        this.textureCache = new Map();
+        this.maxTextureAge = IS_MOBILE ? 10000 : 30000; // Clear textures more aggressively on mobile
 
         // Frustum culling
         this.frustum = new THREE.Frustum();
@@ -126,18 +137,35 @@ class HotspotManager {
         // Create renderer
         this.renderer = new WebGLRenderer({
             powerPreference: IS_MOBILE ? "low-power" : "high-performance",
-            antialias: !IS_MOBILE && window.devicePixelRatio <= 1,
+            antialias: !IS_MOBILE, // Disable antialias on mobile
             stencil: false,
             depth: true,
             alpha: false,
+            precision: IS_MOBILE ? "mediump" : "highp", // Lower precision on mobile
             //preserveDrawingBuffer: false
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(IS_MOBILE ? 1 : Math.min(window.devicePixelRatio, 2));
-        this.renderer.physicallyCorrectLights = true;
+        this.renderer.setPixelRatio(IS_MOBILE ? 1 : Math.min(window.devicePixelRatio, 2)); // Lower pixel ratio for mobile
+        this.renderer.physicallyCorrectLights = !IS_MOBILE; // Disable on mobile for performance
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.shadowMap.enabled = !IS_MOBILE; // Disable shadows on mobile
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Mobile-specific memory management
+        if (IS_MOBILE) {
+            this.renderer.dispose = (() => {
+                const originalDispose = this.renderer.dispose.bind(this.renderer);
+                return () => {
+                    // Clear texture cache
+                    this.textureCache.forEach((texture) => {
+                        texture.dispose();
+                    });
+                    this.textureCache.clear();
+                    originalDispose();
+                };
+            })();
+        }
+
         document.getElementById('container').appendChild(this.renderer.domElement);
 
 
@@ -379,7 +407,7 @@ class HotspotManager {
             };
 
 
-            const modelPath = 'media/model/b737_callouts_v4.glb';
+            const modelPath = 'media/model/output.glb';
             console.log('Loading model from:', modelPath);
 
             // this.loader.load(modelPath, (gltf) => {
@@ -703,8 +731,7 @@ class HotspotManager {
         hotspot.info.classList.add('active');
         
         // Add mobile-fixed class for mobile layout
-        const isMobileView = window.innerWidth <= 600;
-        if (isMobileView) {
+        if (IS_MOBILE) {
             hotspot.info.classList.add('mobile-fixed');
         }
 
@@ -782,10 +809,9 @@ class HotspotManager {
                 this.updateProgress();
 
                 // Only show checklist on desktop, not mobile
-                const isMobileView = window.innerWidth <= 600;
                 const checklistContainer = document.getElementById('checklist-container');
                 
-                if (checklistContainer && !isMobileView) {
+                if (checklistContainer && !IS_MOBILE) {
                     // Show the checklist panel only on desktop
                     checklistContainer.style.display = 'block';
                     checklistContainer.classList.remove('hidden'); // optional
@@ -1005,12 +1031,10 @@ class HotspotManager {
 
             const infoDiv = document.createElement('div');
             infoDiv.className = 'hotspot-info';
-            // Check if it's mobile or desktop
-            const isMobileView = window.innerWidth <= 600;
 
             // Find matching step description from checklist data
             let stepDescription = '';
-            if (isMobileView && this.checklistData) {
+            if (IS_MOBILE && this.checklistData) {
                 const matchingStep = this.checklistData.find(step => step.node === hotspotData.node);
                 if (matchingStep && matchingStep.description) {
                     stepDescription = matchingStep.description;
@@ -1018,15 +1042,22 @@ class HotspotManager {
             }
 
             infoDiv.innerHTML = `
-                <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
-                <div class="text-scroll">
-                    <div class="hotspot-title">${hotspotData.title}</div>
+    <img class="closeSpecIcon" src="media/Close.png" alt="Close" />
+    <div class="text-scroll">
+        <div class="hotspot-title">${hotspotData.title}</div>
 
-                    ${isMobileView && stepDescription ? `<div class="hotspot-description">${stepDescription}</div>` : 
-                      (isMobileView ? `<div class="hotspot-description">${hotspotData.description || ''}</div>` : '')}
-                </div>
-                <div class="bottom-blocker"></div>
-            `;
+        ${
+          IS_MOBILE && stepDescription 
+            ? `<div class="hotspot-description">${formatList(stepDescription)}</div>` 
+            : (IS_MOBILE 
+                ? `<div class="hotspot-description">${formatList(hotspotData.description || '')}</div>` 
+                : ''
+              )
+        }
+    </div>
+    <div class="bottom-blocker"></div>
+`;
+
             document.body.appendChild(infoDiv);
 
             // Add working close logic
@@ -1316,12 +1347,7 @@ class HotspotManager {
             hotspot.info.style.opacity = showInfo ? '1' : '0';
             hotspot.info.style.pointerEvents = showInfo ? 'auto' : 'none';
 
-
-            function isMobileView() {
-                return window.innerWidth < 600 || window.innerHeight < 400;
-            }
-
-            if (isMobileView()) {
+            if (IS_MOBILE) {
                 if (hotspot === this.selectedHotspot) {
                     hotspot.info.classList.add('mobile-fixed');
                     hotspot.info.style.left = '';
@@ -1563,11 +1589,8 @@ class HotspotManager {
         const closeIcon = document.getElementById('closeChecklistIcon');
         const checklistContainer = document.getElementById('checklist-container');
 
-        // Check if it's mobile (width ≤ 600px)
-        const isMobileView = window.innerWidth <= 600;
-
         // Set initial visibility: show for desktop, hide for mobile
-        let isVisible = !isMobileView;
+        let isVisible = !IS_MOBILE;
 
         if (isVisible) {
             checklistContainer.style.display = 'block';
@@ -1710,6 +1733,12 @@ class HotspotManager {
         const muteBtn = document.getElementById('muteBtn');
         const muteIcon = document.getElementById('muteIcon');
 
+        // Hide mute button on mobile devices
+        if (IS_MOBILE) {
+            muteBtn.style.display = 'none';
+            return;
+        }
+
         muteBtn.addEventListener('click', () => {
             this.isMuted = !this.isMuted;
 
@@ -1835,54 +1864,61 @@ class HotspotManager {
         });
     }
 
-    animate() {
-        // Disable shadow and tone mapping on mobile for performance
+    // Add this method to manage textures
+    manageTextures() {
+        if (!IS_MOBILE) return; // Only run on mobile
 
-        // Pause rendering when page is hidden
-        if (document.hidden) {
+        const now = Date.now();
+        this.textureCache.forEach((entry, key) => {
+            if (now - entry.lastUsed > this.maxTextureAge) {
+                entry.texture.dispose();
+                this.textureCache.delete(key);
+            }
+        });
+    }
+
+    // Modified animation easing function for mobile
+    getEasing(t) {
+        if (this.useSimpleEasing) {
+            // Simple linear interpolation for mobile
+            return t;
+        }
+        // Original complex easing for desktop
+        return 1 - Math.pow(1 - t, 4);
+    }
+
+    // Modified animate method for mobile optimization
+    animate() {
+        // Throttle frame rate on mobile
+        if (IS_MOBILE && this.frameCount % 2 !== 0) {
+            this.frameCount++;
             requestAnimationFrame(this.animate.bind(this));
             return;
         }
-        requestAnimationFrame(this.animate.bind(this));
+
+        const delta = this.clock.getDelta();
         this.controls.update();
 
-        // Only update hotspot positions if camera or controls changed
-        if (this.cameraChanged || this.controlsChanged) {
+        // Update hotspots less frequently on mobile
+        if (!IS_MOBILE || this.frameCount % this.raycastInterval === 0) {
             this.updateHotspotPositions();
-            this.cameraChanged = false;
-            this.controlsChanged = false;
         }
 
-        // Update animations
-        if (this.mixer) {
-            const delta = this.clock.getDelta();
-            this.mixer.update(delta);
+        // Manage textures periodically on mobile
+        if (IS_MOBILE && this.frameCount % 300 === 0) {
+            this.manageTextures();
         }
 
-        //Render using composer (postprocessing effects) if not mobile
+        this.frameCount++;
+        
+        // Render scene
         if (!IS_MOBILE && this.composer) {
             this.composer.render();
         } else {
             this.renderer.render(this.scene, this.camera);
         }
-        this.stats.update();
-    }
 
-    animateOutlineEdgeStrength(start, end, duration, onComplete) {
-        if (!this.outlineEffect) return;
-        const startTime = performance.now();
-        const animate = () => {
-            const now = performance.now();
-            const t = Math.min((now - startTime) / duration, 1);
-            this.outlineEffect.edgeStrength = start + (end - start) * t;
-            if (t < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                this.outlineEffect.edgeStrength = end;
-                if (onComplete) onComplete();
-            }
-        };
-        animate();
+        requestAnimationFrame(this.animate.bind(this));
     }
 }
 

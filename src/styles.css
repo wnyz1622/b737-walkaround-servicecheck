@@ -133,16 +133,7 @@ canvas {
     margin-bottom: 12px;
 }
 
-.hotspot-description {
-    font-weight: 400;
-    font-size: 12pt;
-    /* ≈21.3px */
-    line-height: 1.4em;
-    white-space: normal;
-    word-break: break-word;
-    display: none;
-    white-space: pre-wrap;
-}
+
 
 
 .hotspot-info.active .hotspot-description {
@@ -153,8 +144,42 @@ canvas {
     display: block;
 }
 
+.hotspot-number {
+    background: #ef5337;
+    /* circle background */
+    background-image: none;
+    color: white;
+    /* text color */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid white;
+}
+
+.hotspot-number.visited {
+    background: grey;
+    background-image: none;
+    color: white;
+    border: 2px solid white;
+}
+
+.hotspot-number.selected {
+    background: #ffffff;
+    background-image: none;
+    color: #EF5337;
+    border: 2px solid #EF5337;
+}
 
 @media (max-width: 600px) {
+    p {
+    font-size: 12px;}
+
     .hotspot-info.active.mobile-fixed {
         position: fixed;
         bottom: 0px;
@@ -187,10 +212,14 @@ canvas {
         font-size: 9pt;
         /* or 14px or smaller if needed */
         line-height: 1.4em;
+        word-wrap: break-word;
+        white-space: pre-wrap;   
     }
 
     .hotspot-title {
         font-size: 11pt;
+        margin-right: 12px;
+
     }
 
     #mouse-control {
@@ -217,20 +246,31 @@ canvas {
         height: 100px;
     }
 
+    .hotspot-number {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        border: 1px;
+    }
+
 }
 
 @media (max-width: 900px) and (orientation: landscape) {
+     p {
+    font-size: 12px;}
     .hotspot-info.mobile-fixed {
         position: fixed;
         top: 70px;
         right: 20px;
-        /* Prevent overflow below header */
-        overflow-y: auto;
-        /* Add scroll if content overflows */
+
         z-index: 1002;
         height: auto;
-        width: 35%;
+        max-height: 180px;
+        width: 200px;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
+
 
     .hotspot {
         width: 18px;
@@ -240,10 +280,12 @@ canvas {
     .hotspot-description {
         font-size: 8pt;
         line-height: 1.4em;
+   
     }
 
     .hotspot-title {
         font-size: 10pt;
+        margin-right: 12px
     }
 
     #mouse-control {
@@ -268,6 +310,7 @@ canvas {
     .button-column {
         gap: 2px;
     }
+
 }
 
 .loading-screen {
@@ -635,12 +678,13 @@ canvas {
     text-align: center;
     width: 100%;
 }
+
 @media (max-width: 600px) {
     .hotspot-title-display {
         width: 200px;
         height: 24px;
- 
-        
+
+
     }
 }
 
@@ -878,36 +922,4 @@ canvas {
 
 .step-item.open .step-description {
     display: block;
-}
-
-.hotspot-number {
-    background: #ef5337;
-    /* circle background */
-    background-image: none;
-    color: white;
-    /* text color */
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Noto Sans', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid white;
-}
-
-.hotspot-number.visited {
-    background: grey;
-    background-image: none;
-    color: white;
-    border: 2px solid white;
-}
-
-.hotspot-number.selected {
-    background: #ffffff;
-    background-image: none;
-    color: #EF5337;
-    border: 2px solid #EF5337;
 }
