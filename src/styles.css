@@ -247,11 +247,28 @@ canvas {
     }
 
     .hotspot-number {
-        width: 16px;
-        height: 16px;
-        font-size: 9px;
-        border: 1px;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid white;
     }
+    .hotspot-number.selected {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid #EF5337;
+    }
+
+    .hotspot-number.visited{
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid white;
+    }
+
 
 }
 
@@ -309,6 +326,29 @@ canvas {
 
     .button-column {
         gap: 2px;
+    }
+
+    .hotspot-number {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid white;
+    }
+    .hotspot-number.selected {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid #EF5337;
+    }
+
+    .hotspot-number.visited{
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        font-weight: normal;
+        border: 1px solid white;
     }
 
 }
